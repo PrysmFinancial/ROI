@@ -3,9 +3,16 @@
 @theme {
   --color-roi-bg: #141210;
   --color-roi-surface: #1f1b18;
+  --color-roi-surface-raised: #26211d;
   --color-roi-border: #3a342e;
   --color-roi-text: #f0ebe3;
   --color-roi-muted: #9a9188;
+  --color-roi-accent: #c4a574;
+  --color-roi-btn: #e8e0d4;
+  --color-roi-btn-text: #1a1612;
+  --color-roi-seated: #c47a4a;
+  --color-roi-open: #6a9a6a;
+  --color-roi-held: #6a8fbf;
   --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }

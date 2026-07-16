@@ -1,0 +1,50 @@
+<%# locals: (active_tab: "pre_shift", floor_metrics: nil) %>
+<header class="border-b border-roi-border/70 px-6 py-4 md:px-8">
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    <div class="flex min-w-[7rem] items-center gap-4">
+      <%= link_to host_path, class: "block leading-none" do %>
+        <span class="font-serif text-3xl tracking-wide text-roi-text">ROI</span>
+        <span class="mt-0.5 block text-[0.6rem] font-medium uppercase tracking-[0.22em] text-roi-muted">Ser Host</span>
+      <% end %>
+    </div>
+
+    <nav class="flex items-center gap-1 rounded-full bg-roi-surface p-1" aria-label="Host views">
+      <%= link_to "Pre-shift", host_path,
+            class: host_tab_classes(active_tab, "pre_shift") %>
+      <span class="<%= host_tab_classes(active_tab, "confirmations") %> cursor-default opacity-70">
+        Confirmations
+      </span>
+      <%= link_to "Floor", host_floor_path,
+            class: host_tab_classes(active_tab, "floor") %>
+    </nav>
+
+    <div class="flex min-w-[7rem] flex-wrap items-center justify-end gap-4">
+      <%= link_to "Switch role", root_path,
+            class: "text-[0.65rem] font-medium uppercase tracking-[0.18em] text-roi-muted transition-colors hover:text-roi-text" %>
+      <time class="hidden text-sm text-roi-muted sm:block" datetime="<%= Time.current.iso8601 %>">
+        <%= Time.current.strftime("%-l:%M") %> · <%= Time.current.strftime("%a") %>
+      </time>
+    </div>
+  </div>
+
+  <% if floor_metrics.present? %>
+    <div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-roi-border/50 pt-4">
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+        <% floor_metrics.each do |metric| %>
+          <div>
+            <p class="text-[0.6rem] font-medium uppercase tracking-[0.18em] text-roi-muted"><%= metric[:label] %></p>
+            <p class="mt-0.5 text-lg text-roi-text"><%= metric[:value] %></p>
+          </div>
+        <% end %>
+      </div>
+
+      <label class="ml-auto inline-flex cursor-pointer items-center gap-3 text-sm text-roi-muted">
+        <span>Rush mode</span>
+        <span class="relative inline-flex h-6 w-11 items-center rounded-full bg-roi-surface-raised">
+          <span class="absolute left-1 h-4 w-4 rounded-full bg-roi-muted"></span>
+        </span>
+        <input type="checkbox" class="sr-only" disabled aria-label="Rush mode">
+      </label>
+    </div>
+  <% end %>
+</header>

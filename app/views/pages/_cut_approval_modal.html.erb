@@ -1,0 +1,56 @@
+<%# locals: (name: "Priya N.") %>
+<div data-pin-modal-target="modal"
+     data-action="click->pin-modal#backdrop keydown@window->pin-modal#keydown"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="cut-modal-title">
+  <div class="w-full max-w-md rounded-3xl border border-roi-border bg-roi-surface px-6 py-8 shadow-2xl md:px-8">
+    <p class="text-center text-[0.65rem] font-medium uppercase tracking-[0.22em] text-roi-accent">
+      Cut recommendation · Manager approval
+    </p>
+    <h2 id="cut-modal-title" class="mt-3 text-center font-serif text-4xl text-roi-text">
+      Cut <%= name %>?
+    </h2>
+    <p class="mx-auto mt-4 max-w-sm text-center text-sm leading-relaxed text-roi-muted">
+      Bar load is winding down and late demand is predicted soft. Enter the 4-digit manager code to approve.
+    </p>
+
+    <div class="mt-8 flex justify-center gap-3" aria-label="PIN entry">
+      <% 4.times do %>
+        <div data-pin-modal-target="digit"
+             class="flex h-12 w-12 items-center justify-center rounded-xl border border-roi-border bg-roi-bg font-serif text-2xl text-roi-text">
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mx-auto mt-8 grid max-w-xs grid-cols-3 gap-2">
+      <% (1..9).each do |n| %>
+        <button type="button"
+                data-action="pin-modal#press"
+                data-value="<%= n %>"
+                class="rounded-xl bg-roi-surface-raised py-4 text-lg text-roi-text transition-colors hover:bg-roi-border/60">
+          <%= n %>
+        </button>
+      <% end %>
+      <span aria-hidden="true"></span>
+      <button type="button"
+              data-action="pin-modal#press"
+              data-value="0"
+              class="rounded-xl bg-roi-surface-raised py-4 text-lg text-roi-text transition-colors hover:bg-roi-border/60">
+        0
+      </button>
+      <button type="button"
+              data-action="pin-modal#delete"
+              class="rounded-xl bg-roi-surface-raised py-4 text-sm uppercase tracking-wide text-roi-muted transition-colors hover:bg-roi-border/60 hover:text-roi-text">
+        Del
+      </button>
+    </div>
+
+    <button type="button"
+            data-action="pin-modal#close"
+            class="mt-6 w-full text-center text-sm text-roi-muted transition-colors hover:text-roi-text">
+      Cancel
+    </button>
+  </div>
+</div>

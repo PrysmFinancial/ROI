@@ -1,0 +1,121 @@
+<% content_for :title, "ROI — Host · Floor" %>
+
+<div class="min-h-screen" data-controller="pin-modal">
+  <%= render "host_header", active_tab: "floor", floor_metrics: @floor_metrics %>
+
+  <main class="mx-auto grid max-w-7xl gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.9fr)] lg:gap-8 lg:px-8 lg:py-8">
+    <section aria-labelledby="tonight-service-heading">
+      <div class="mb-5 flex flex-wrap items-baseline justify-between gap-3">
+        <h1 id="tonight-service-heading" class="font-serif text-4xl text-roi-text md:text-5xl">
+          Tonight&rsquo;s service
+        </h1>
+        <p class="text-[0.65rem] font-medium uppercase tracking-[0.18em] text-roi-muted">
+          4 open · 8 seated
+        </p>
+      </div>
+
+      <div class="mb-6 flex flex-col gap-3 rounded-2xl border border-roi-border bg-roi-surface px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+        <p class="text-sm leading-relaxed text-roi-text">
+          <span class="text-roi-accent">Pacing suggestion:</span>
+          Kitchen at 82% — hold the 8:30 window seat 10 minutes.
+        </p>
+        <div class="flex shrink-0 gap-2">
+          <button type="button" class="rounded-xl bg-roi-btn px-4 py-2 text-sm font-medium text-roi-btn-text transition-opacity hover:opacity-90">
+            Confirm
+          </button>
+          <button type="button" class="rounded-xl border border-roi-border px-4 py-2 text-sm text-roi-muted transition-colors hover:text-roi-text">
+            Decline
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <% @server_rows.each do |row| %>
+          <div>
+            <p class="mb-3 text-[0.65rem] font-medium uppercase tracking-[0.18em] text-roi-muted">
+              <%= row[:label] %>
+            </p>
+            <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+              <% row[:tables].each do |table| %>
+                <article class="rounded-2xl border border-roi-border bg-roi-surface p-4">
+                  <div class="flex items-start justify-between gap-2">
+                    <div>
+                      <p class="font-medium text-roi-text"><%= table[:id] %></p>
+                      <p class="mt-0.5 text-xs text-roi-muted"><%= table[:capacity] %></p>
+                    </div>
+                    <span class="mt-1 h-2.5 w-2.5 shrink-0 rounded-full <%= table_status_dot(table[:status]) %>"
+                          title="<%= table[:status].to_s.titleize %>"
+                          aria-label="<%= table[:status].to_s.titleize %>"></span>
+                  </div>
+                  <p class="mt-4 truncate text-sm <%= table[:status] == :open ? "text-roi-muted" : "text-roi-text" %>">
+                    <%= table[:guest] %>
+                  </p>
+                  <p class="mt-1 text-xs text-roi-muted">
+                    <% if table[:status] == :open %>
+                      Available
+                    <% else %>
+                      <%= table[:covers] %> covers<%= " · #{table[:seated]}" if table[:seated] %>
+                    <% end %>
+                  </p>
+                </article>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <button type="button"
+              data-action="pin-modal#open"
+              class="mt-8 inline-flex items-center gap-2 text-sm text-roi-accent transition-colors hover:text-roi-text">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+        </svg>
+        Cut recommended — review
+      </button>
+    </section>
+
+    <aside aria-labelledby="seating-queue-heading">
+      <div class="mb-4 flex items-baseline justify-between gap-3">
+        <h2 id="seating-queue-heading" class="font-serif text-3xl text-roi-text">Seating queue</h2>
+        <p class="text-[0.65rem] font-medium uppercase tracking-[0.18em] text-roi-muted">
+          <%= @queue.size %> waiting
+        </p>
+      </div>
+
+      <div class="space-y-3">
+        <% @queue.each do |party| %>
+          <article class="rounded-2xl border border-roi-border bg-roi-surface p-4">
+            <div class="flex flex-wrap items-start justify-between gap-2">
+              <div>
+                <p class="text-lg text-roi-text"><%= party[:name] %></p>
+                <p class="mt-1 text-sm text-roi-muted"><%= party[:meta] %></p>
+              </div>
+              <% if party[:tags].any? %>
+                <div class="flex flex-wrap gap-1.5">
+                  <% party[:tags].each do |tag| %>
+                    <span class="rounded-full border border-roi-border px-2 py-0.5 text-[0.6rem] font-medium uppercase tracking-[0.12em] text-roi-muted">
+                      <%= tag %>
+                    </span>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+            <p class="mt-3 text-[0.65rem] font-medium uppercase tracking-[0.14em] text-roi-accent">
+              <%= party[:recommend] %>
+            </p>
+            <div class="mt-4 flex flex-col gap-2">
+              <button type="button" class="rounded-xl bg-roi-btn px-4 py-2.5 text-sm font-medium text-roi-btn-text transition-opacity hover:opacity-90">
+                Confirm seat
+              </button>
+              <button type="button" class="rounded-xl border border-roi-border px-4 py-2.5 text-sm text-roi-muted transition-colors hover:text-roi-text">
+                Offer alternate
+              </button>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    </aside>
+  </main>
+
+  <%= render "cut_approval_modal", name: "Priya N." %>
+</div>
