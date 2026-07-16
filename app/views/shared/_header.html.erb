@@ -1,0 +1,10 @@
+<%# Shared operational header bar — the brand + role block seen at the top-left of every
+    Host/Manager mockup (docs/screenshots/Host*.png, Manager*.png). Scoped narrowly to just
+    that block for now: the rest of the mockup's header (tab nav, live stat strip, rush mode
+    toggle, clock) all depend on real data/features that don't exist yet (Sprint 2+), so
+    faking them here would be premature. The border-b gives this room to grow into a full
+    bar without restructuring later. %>
+<header class="border-b border-roi-border px-6 py-4">
+  <span class="font-serif text-2xl text-roi-text">ROI</span>
+  <p class="roi-eyebrow mt-0.5"><%= role_label %></p>
+</header>
