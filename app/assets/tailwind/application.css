@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 @theme {
+  /* Core palette — proven in production on the opening page. Do not change
+     without checking docs/design-system.md for what else depends on it. */
   --color-roi-bg: #141210;
   --color-roi-surface: #1f1b18;
   --color-roi-surface-raised: #26211d;
@@ -10,9 +12,32 @@
   --color-roi-accent: #c4a574;
   --color-roi-btn: #e8e0d4;
   --color-roi-btn-text: #1a1612;
+
+  /* Floor status dots (Host floor cards) */
   --color-roi-seated: #c47a4a;
   --color-roi-open: #6a9a6a;
   --color-roi-held: #6a8fbf;
+
+  /* Semantic status colors, shared across floor status dots, progress bars,
+     score badges, and alert pills (see docs/design-system.md). Muted/desaturated
+     on purpose to match the core palette rather than stock Tailwind brights. */
+  --color-roi-success: #8a9a72;
+  --color-roi-warning: #c9a227;
+  --color-roi-danger: #c1694f;
+  --color-roi-info: #7889a3;
+
   --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Reusable "eyebrow" label style — the small tracked-uppercase category/status
+   text used throughout (e.g. "Operational · iPad" on the opening page cards).
+   Formalizes the pattern already used twice in opening.html.erb. */
+@utility roi-eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-roi-muted);
 }
