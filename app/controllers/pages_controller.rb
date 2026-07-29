@@ -71,7 +71,7 @@ class PagesController < ApplicationController
       {
         name: "Vasquez",
         meta: "8:30 reservation · 2 covers",
-        tags: ["VIP", "14 visits"],
+        tags: [ "VIP", "14 visits" ],
         recommend: "ROI recommends T13 · Mara V."
       },
       {
@@ -89,7 +89,7 @@ class PagesController < ApplicationController
       {
         name: "Delacroix",
         meta: "8:45 reservation · 3 covers",
-        tags: ["Recovery"],
+        tags: [ "Recovery" ],
         recommend: "ROI recommends T23 · Devin O."
       }
     ]
