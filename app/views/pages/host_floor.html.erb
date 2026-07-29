@@ -19,8 +19,12 @@
       </div>
 
       <% if @shift.pacing_hold_active? %>
-        <div class="mb-6 rounded-2xl border border-roi-accent/40 bg-roi-surface px-5 py-4 text-sm text-roi-accent">
-          Pacing hold active until <%= @shift.pacing_hold_until.strftime("%-l:%M %p") %>.
+        <div class="mb-6 flex flex-col gap-3 rounded-2xl border border-roi-accent/40 bg-roi-surface px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <p class="text-sm text-roi-accent">
+            Pacing hold active until <%= @shift.pacing_hold_until.strftime("%-l:%M %p") %>.
+          </p>
+          <%= button_to "Clear hold", host_clear_pacing_hold_path, method: :post,
+                class: "rounded-xl border border-roi-accent/50 px-4 py-2 text-sm text-roi-accent transition-colors hover:bg-roi-accent/10" %>
         </div>
       <% elsif @pacing %>
         <div class="mb-6 flex flex-col gap-3 rounded-2xl border border-roi-border bg-roi-surface px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">

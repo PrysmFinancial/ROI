@@ -7,6 +7,11 @@ class Host::PacingController < Host::BaseController
     decide!("declined")
   end
 
+  def clear_hold
+    Host::ClearPacingHold.call(shift: current_shift)
+    redirect_to host_floor_path, notice: "Pacing hold cleared."
+  end
+
   private
 
   def decide!(decision)

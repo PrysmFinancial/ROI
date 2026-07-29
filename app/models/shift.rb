@@ -6,7 +6,7 @@ class Shift < ApplicationRecord
   has_many :pacing_recommendations, dependent: :destroy
   has_many :cut_recommendations, dependent: :destroy
 
-  validates :service_date, :location_name, :manager_pin, presence: true
+  validates :service_date, :location_name, presence: true
 
   def self.current
     order(service_date: :desc, id: :desc).first

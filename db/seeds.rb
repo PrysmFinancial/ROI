@@ -11,13 +11,16 @@ ActiveRecord::Base.transaction do
   ServerShift.delete_all
   Server.delete_all
   Shift.delete_all
+  Manager.delete_all
+
+  Manager.create!(name: "Jordan Lee", pin: "1234")
+  Manager.create!(name: "Sam Ortiz", pin: "5678")
 
   shift = Shift.create!(
     service_date: Date.new(2026, 6, 6),
     location_name: "The Hearth Room",
     rush_mode: false,
-    sections_approved: false,
-    manager_pin: "1234"
+    sections_approved: false
   )
 
   servers = {
@@ -204,4 +207,4 @@ ActiveRecord::Base.transaction do
 end
 
 puts "Seeded shift #{Shift.current.id} for #{Shift.current.service_date} at #{Shift.current.location_name}."
-puts "Demo manager PIN: #{Shift.current.manager_pin}"
+puts "Demo manager PINs: #{Manager.active.order(:name).map { |m| "#{m.name}=#{m.pin}" }.join(", ")}"

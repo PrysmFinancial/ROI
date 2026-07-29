@@ -9,15 +9,19 @@ module Host
     def initialize(recommendation, pin)
       @recommendation = recommendation
       @pin = pin.to_s
-      @shift = recommendation.shift
       @server_shift = recommendation.server_shift
     end
 
     def call
-      raise InvalidPinError, "Invalid manager code" unless pin == shift.manager_pin
+      manager = Manager.authenticate_pin(pin)
+      raise InvalidPinError, "Invalid manager code" unless manager
 
       ActiveRecord::Base.transaction do
-        recommendation.update!(status: "approved", approved_at: Time.current)
+        recommendation.update!(
+          status: "approved",
+          approved_at: Time.current,
+          approved_by_manager: manager
+        )
         server_shift.update!(cut_status: "approved")
       end
 
@@ -26,6 +30,6 @@ module Host
 
     private
 
-    attr_reader :recommendation, :pin, :shift, :server_shift
+    attr_reader :recommendation, :pin, :server_shift
   end
 end

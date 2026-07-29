@@ -10,18 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_29_203215) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_29_210135) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "cut_recommendations", force: :cascade do |t|
     t.datetime "approved_at"
+    t.bigint "approved_by_manager_id"
     t.datetime "created_at", null: false
     t.string "reason", null: false
     t.bigint "server_shift_id", null: false
     t.bigint "shift_id", null: false
     t.string "status", default: "open", null: false
     t.datetime "updated_at", null: false
+    t.index ["approved_by_manager_id"], name: "index_cut_recommendations_on_approved_by_manager_id"
     t.index ["server_shift_id"], name: "index_cut_recommendations_on_server_shift_id"
     t.index ["shift_id"], name: "index_cut_recommendations_on_shift_id"
   end
@@ -37,6 +39,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_29_203215) do
     t.datetime "updated_at", null: false
     t.index ["label"], name: "index_dining_tables_on_label"
     t.index ["section_id"], name: "index_dining_tables_on_section_id"
+  end
+
+  create_table "managers", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "pin", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pin"], name: "index_managers_on_pin", unique: true
   end
 
   create_table "pacing_recommendations", force: :cascade do |t|
@@ -126,7 +137,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_29_203215) do
   create_table "shifts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "location_name", default: "The Hearth Room", null: false
-    t.string "manager_pin", default: "1234", null: false
     t.datetime "pacing_hold_until"
     t.boolean "rush_mode", default: false, null: false
     t.boolean "sections_approved", default: false, null: false
@@ -136,6 +146,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_29_203215) do
     t.index ["service_date"], name: "index_shifts_on_service_date"
   end
 
+  add_foreign_key "cut_recommendations", "managers", column: "approved_by_manager_id"
   add_foreign_key "cut_recommendations", "server_shifts"
   add_foreign_key "cut_recommendations", "shifts"
   add_foreign_key "dining_tables", "sections"

@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     post "parties/:id/confirm_seat", to: "seating#confirm", as: :confirm_seat
     post "pacing/:id/confirm", to: "pacing#confirm", as: :confirm_pacing
     post "pacing/:id/decline", to: "pacing#decline", as: :decline_pacing
+    post "pacing/clear_hold", to: "pacing#clear_hold", as: :clear_pacing_hold
     post "cuts/:id/approve", to: "cuts#approve", as: :approve_cut
   end
 end
