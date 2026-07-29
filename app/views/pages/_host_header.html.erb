@@ -11,9 +11,8 @@
     <nav class="flex items-center gap-1 rounded-full bg-roi-surface p-1" aria-label="Host views">
       <%= link_to "Pre-shift", host_path,
             class: host_tab_classes(active_tab, "pre_shift") %>
-      <span class="<%= host_tab_classes(active_tab, "confirmations") %> cursor-default opacity-70">
-        Confirmations
-      </span>
+      <%= link_to "Confirmations", host_confirmations_path,
+            class: host_tab_classes(active_tab, "confirmations") %>
       <%= link_to "Floor", host_floor_path,
             class: host_tab_classes(active_tab, "floor") %>
     </nav>

@@ -1,6 +1,8 @@
 <% content_for :title, "ROI — Host · Floor" %>
 
-<div class="min-h-screen" data-controller="pin-modal">
+<div class="min-h-screen"
+     data-controller="pin-modal"
+     data-pin-modal-auto-open-value="<%= @show_cut_modal %>">
   <%= render "host_header", active_tab: "floor", floor_metrics: @floor_metrics %>
 
   <main class="mx-auto grid max-w-7xl gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.9fr)] lg:gap-8 lg:px-8 lg:py-8">
@@ -117,5 +119,5 @@
     </aside>
   </main>
 
-  <%= render "cut_approval_modal", name: "Priya N." %>
+  <%= render "cut_approval_modal", name: "Priya N.", hidden: !@show_cut_modal %>
 </div>

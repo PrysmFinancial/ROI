@@ -1,7 +1,7 @@
-<%# locals: (name: "Priya N.") %>
+<%# locals: (name: "Priya N.", hidden: false) %>
 <div data-pin-modal-target="modal"
      data-action="click->pin-modal#backdrop keydown@window->pin-modal#keydown"
-     class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
+     class="fixed inset-0 z-50 <%= hidden ? "hidden" : "flex" %> items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
      role="dialog"
      aria-modal="true"
      aria-labelledby="cut-modal-title">

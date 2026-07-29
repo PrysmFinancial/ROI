@@ -2,11 +2,14 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["digit", "modal"]
-  static values = { length: { type: Number, default: 4 } }
+  static values = {
+    length: { type: Number, default: 4 },
+    autoOpen: { type: Boolean, default: false }
+  }
 
   connect() {
     this.code = ""
-    this.open()
+    if (this.autoOpenValue) this.open()
   }
 
   open() {

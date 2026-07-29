@@ -29,6 +29,7 @@ class PagesController < ApplicationController
   end
 
   def host_floor
+    @show_cut_modal = params[:cut] == "1"
     @floor_metrics = [
       { label: "Covers", value: "25" },
       { label: "Covers / hr", value: "11.4" },
@@ -91,6 +92,18 @@ class PagesController < ApplicationController
         tags: ["Recovery"],
         recommend: "ROI recommends T23 · Devin O."
       }
+    ]
+  end
+
+  def host_confirmations
+    @confirmation_counts = { confirmed: 1, pending: 5 }
+    @confirmation_calls = [
+      { time: "7:00", name: "Bianchi", covers: 3, table: "T22", note: "Regular · still wine", status: :confirmed },
+      { time: "7:30", name: "Okafor", covers: 4, table: "T12", note: "Birthday · cake at 9", status: :pending },
+      { time: "8:00", name: "Adeyemi", covers: 7, table: "T24", note: "Allergy: shellfish", status: :pending },
+      { time: "8:30", name: "Vasquez", covers: 2, table: "T13", note: "VIP · anniversary", status: :pending },
+      { time: "8:45", name: "Mortensen", covers: 6, table: "T14", note: "High chair x1", status: :pending },
+      { time: "9:00", name: "Delacroix", covers: 3, table: "—", note: "Recovery flag", status: :pending }
     ]
   end
 
