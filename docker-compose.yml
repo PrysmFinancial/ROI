@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - roi_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    # Uses `bundle exec rails` rather than the bin/rails binstub: on a Windows host, git checks that
+    # script out with CRLF line endings, which breaks its shebang when run inside the Linux container.
+    command: >
+      bash -c "
+        bundle check || bundle install &&
+        bundle exec rails db:prepare &&
+        bundle exec rails tailwindcss:watch &
+        bundle exec rails server -b 0.0.0.0 -p 3000
+      "
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432
+    volumes:
+      - .:/rails
+      - roi_bundle_cache:/usr/local/bundle
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    tty: true
+    stdin_open: true
+
+volumes:
+  roi_postgres_data:
+  roi_bundle_cache:

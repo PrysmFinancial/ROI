@@ -1,0 +1,21 @@
+# syntax=docker/dockerfile:1
+# Development image. The project's other Dockerfile is production-only (see its header comment) —
+# this one trades image size/security hardening for a fast, editable local dev loop.
+
+FROM ruby:3.4.4-slim
+
+RUN apt-get update -qq && apt-get install --no-install-recommends -y \
+      build-essential git libpq-dev libvips libyaml-dev pkg-config curl ca-certificates postgresql-client \
+    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install --no-install-recommends -y nodejs \
+    && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+WORKDIR /rails
+
+# Copied (not bind-mounted) so gems install into the image and seed the bundle cache volume on first run.
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+EXPOSE 3000
+
+CMD ["bin/dev"]
