@@ -1,0 +1,30 @@
+<li id="<%= dom_id(call, :confirmation) %>"
+    class="grid gap-4 rounded-2xl border border-roi-border/60 bg-roi-surface px-4 py-4 md:grid-cols-[4rem_minmax(0,1fr)_auto] md:items-center md:px-5">
+  <time class="font-serif text-2xl text-roi-text"><%= call.reservation_time_label %></time>
+
+  <div class="min-w-0">
+    <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+      <p class="font-medium text-roi-text"><%= call.name %></p>
+      <p class="text-sm text-roi-muted">
+        <%= call.covers %> covers · <%= call.dining_table&.label || "—" %>
+      </p>
+    </div>
+    <p class="mt-1 text-sm text-roi-muted"><%= call.note %></p>
+  </div>
+
+  <div class="grid grid-cols-3 gap-2">
+    <% [
+      ["confirmed", "✓", "Confirmed"],
+      ["no_answer", "⌕", "No answer"],
+      ["cancelled", "×", "Cancelled"]
+    ].each do |status, icon, label| %>
+      <% active = call.confirmation_status == status %>
+      <%= button_to host_confirmation_path(call, status: status),
+            method: :patch,
+            class: "inline-flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs transition-colors #{active ? "border-roi-accent/50 bg-roi-accent/10 text-roi-accent" : "border-roi-border text-roi-muted hover:text-roi-text"}" do %>
+        <span aria-hidden="true"><%= icon %></span>
+        <span><%= label %></span>
+      <% end %>
+    <% end %>
+  </div>
+</li>

@@ -1,10 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["digit", "modal"]
+  static targets = ["digit", "modal", "error"]
   static values = {
     length: { type: Number, default: 4 },
-    autoOpen: { type: Boolean, default: false }
+    autoOpen: { type: Boolean, default: false },
+    cutUrl: { type: String, default: "" }
   }
 
   connect() {
@@ -31,6 +32,7 @@ export default class extends Controller {
 
     this.code += value
     this.renderDigits()
+    this.hideError()
   }
 
   delete() {
@@ -41,6 +43,37 @@ export default class extends Controller {
   clear() {
     this.code = ""
     this.renderDigits()
+    this.hideError()
+  }
+
+  submit() {
+    if (this.code.length < this.lengthValue) {
+      this.showError()
+      return
+    }
+    if (!this.cutUrlValue) return
+
+    const form = document.createElement("form")
+    form.method = "post"
+    form.action = this.cutUrlValue
+
+    const csrf = document.querySelector("meta[name='csrf-token']")?.content
+    if (csrf) {
+      const token = document.createElement("input")
+      token.type = "hidden"
+      token.name = "authenticity_token"
+      token.value = csrf
+      form.appendChild(token)
+    }
+
+    const pin = document.createElement("input")
+    pin.type = "hidden"
+    pin.name = "pin"
+    pin.value = this.code
+    form.appendChild(pin)
+
+    document.body.appendChild(form)
+    form.submit()
   }
 
   backdrop(event) {
@@ -55,6 +88,12 @@ export default class extends Controller {
       return
     }
 
+    if (event.key === "Enter") {
+      event.preventDefault()
+      this.submit()
+      return
+    }
+
     if (event.key === "Backspace") {
       event.preventDefault()
       this.delete()
@@ -66,6 +105,7 @@ export default class extends Controller {
       if (this.code.length >= this.lengthValue) return
       this.code += event.key
       this.renderDigits()
+      this.hideError()
     }
   }
 
@@ -74,5 +114,13 @@ export default class extends Controller {
       el.textContent = this.code[index] ? "•" : ""
       el.classList.toggle("border-roi-accent", index === this.code.length && this.code.length < this.lengthValue)
     })
+  }
+
+  showError() {
+    if (this.hasErrorTarget) this.errorTarget.classList.remove("hidden")
+  }
+
+  hideError() {
+    if (this.hasErrorTarget) this.errorTarget.classList.add("hidden")
   }
 }
