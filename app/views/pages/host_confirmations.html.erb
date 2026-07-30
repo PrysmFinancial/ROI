@@ -1,6 +1,6 @@
 <% content_for :title, "ROI — Host · Confirmations" %>
 
-<div class="min-h-screen" data-controller="confirmation-calls">
+<div class="min-h-screen">
   <%= render "host_header", active_tab: "confirmations" %>
 
   <main class="mx-auto max-w-7xl px-6 py-8 md:px-8">
@@ -12,56 +12,12 @@
         <h1 class="mt-2 font-serif text-4xl text-roi-text md:text-5xl">Confirmation calls</h1>
       </div>
 
-      <div class="flex gap-7 text-right">
-        <div>
-          <p class="text-[0.6rem] font-medium uppercase tracking-[0.2em] text-roi-muted">Confirmed</p>
-          <p data-confirmation-calls-target="confirmedCount" class="mt-1 font-serif text-3xl text-roi-accent">
-            <%= @confirmation_counts[:confirmed] %>
-          </p>
-        </div>
-        <div>
-          <p class="text-[0.6rem] font-medium uppercase tracking-[0.2em] text-roi-muted">Pending</p>
-          <p data-confirmation-calls-target="pendingCount" class="mt-1 font-serif text-3xl text-roi-accent">
-            <%= @confirmation_counts[:pending] %>
-          </p>
-        </div>
-      </div>
+      <%= render "confirmation_counts", counts: @confirmation_counts %>
     </div>
 
     <ol class="space-y-2" aria-label="Reservation confirmation calls">
       <% @confirmation_calls.each do |call| %>
-        <li data-confirmation-calls-target="row"
-            data-status="<%= call[:status] %>"
-            class="grid gap-4 rounded-2xl border border-roi-border/60 bg-roi-surface px-4 py-4 md:grid-cols-[4rem_minmax(0,1fr)_auto] md:items-center md:px-5">
-          <time class="font-serif text-2xl text-roi-text"><%= call[:time] %></time>
-
-          <div class="min-w-0">
-            <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              <p class="font-medium text-roi-text"><%= call[:name] %></p>
-              <p class="text-sm text-roi-muted">
-                <%= call[:covers] %> covers · <%= call[:table] %>
-              </p>
-            </div>
-            <p class="mt-1 text-sm text-roi-muted"><%= call[:note] %></p>
-          </div>
-
-          <div class="grid grid-cols-3 gap-2">
-            <% [
-              ["confirmed", "✓", "Confirmed"],
-              ["no_answer", "⌕", "No answer"],
-              ["cancelled", "×", "Cancelled"]
-            ].each do |status, icon, label| %>
-              <% active = call[:status].to_s == status %>
-              <button type="button"
-                      data-action="confirmation-calls#setStatus"
-                      data-status="<%= status %>"
-                      class="inline-flex items-center justify-center gap-1.5 rounded-xl border px-3 py-2 text-xs transition-colors <%= active ? "border-roi-accent/50 bg-roi-accent/10 text-roi-accent" : "border-roi-border text-roi-muted hover:text-roi-text" %>">
-                <span aria-hidden="true"><%= icon %></span>
-                <span><%= label %></span>
-              </button>
-            <% end %>
-          </div>
-        </li>
+        <%= render "confirmation_row", call: call %>
       <% end %>
     </ol>
   </main>

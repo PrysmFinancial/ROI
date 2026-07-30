@@ -25,6 +25,12 @@
   </head>
 
   <body class="bg-roi-bg text-roi-text font-sans antialiased">
+    <% if notice.present? %>
+      <div class="border-b border-roi-border bg-roi-surface px-6 py-3 text-sm text-roi-accent"><%= notice %></div>
+    <% end %>
+    <% if alert.present? %>
+      <div class="border-b border-roi-border bg-roi-surface px-6 py-3 text-sm text-roi-danger"><%= alert %></div>
+    <% end %>
     <%= yield %>
   </body>
 </html>

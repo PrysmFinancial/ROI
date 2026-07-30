@@ -35,25 +35,30 @@
             ROI proposes sections by forecast load and server baselines. Approve or adjust.
           </p>
         </div>
-        <button type="button"
-                class="inline-flex shrink-0 items-center justify-center rounded-xl bg-roi-btn px-5 py-3 text-sm font-medium text-roi-btn-text transition-opacity hover:opacity-90">
-          Approve all
-        </button>
+        <div class="flex flex-col items-stretch gap-2 sm:items-end">
+          <%= button_to "Approve all",
+                host_approve_sections_path,
+                method: :post,
+                class: "inline-flex shrink-0 items-center justify-center rounded-xl bg-roi-btn px-5 py-3 text-sm font-medium text-roi-btn-text transition-opacity hover:opacity-90" %>
+          <% if @shift.sections_approved? %>
+            <p class="text-xs text-roi-accent">Approved <%= @shift.sections_approved_at&.strftime("%-l:%M %p") %></p>
+          <% end %>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <% @sections.each do |section| %>
           <article class="rounded-2xl border border-roi-border bg-roi-surface p-5">
             <p class="text-[0.65rem] font-medium uppercase tracking-[0.18em] text-roi-muted">
-              <%= section[:zone] %>
+              <%= section.name %>
             </p>
             <div class="mt-4 flex items-center gap-3">
               <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-roi-border bg-roi-surface-raised font-serif text-lg text-roi-text">
-                <%= section[:initial] %>
+                <%= section.server_shift&.initial || "?" %>
               </div>
               <div class="min-w-0">
-                <p class="truncate text-lg text-roi-text"><%= section[:name] %></p>
-                <p class="mt-0.5 text-sm text-roi-muted"><%= section[:detail] %></p>
+                <p class="truncate text-lg text-roi-text"><%= section.server_shift&.name || "Unassigned" %></p>
+                <p class="mt-0.5 text-sm text-roi-muted"><%= section.table_summary %></p>
               </div>
             </div>
             <button type="button"
@@ -80,11 +85,11 @@
         <ul class="divide-y divide-roi-border/80" role="list">
           <% @reservations.each do |reservation| %>
             <li class="grid grid-cols-[4.5rem_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4 md:grid-cols-[5rem_8rem_minmax(0,1fr)_auto] md:gap-6">
-              <time class="text-sm text-roi-muted"><%= reservation[:time] %></time>
-              <p class="truncate font-medium text-roi-text"><%= reservation[:name] %></p>
-              <p class="hidden truncate text-sm text-roi-muted md:block"><%= reservation[:note] %></p>
+              <time class="text-sm text-roi-muted"><%= reservation.reservation_time_label || "—" %></time>
+              <p class="truncate font-medium text-roi-text"><%= reservation.name %></p>
+              <p class="hidden truncate text-sm text-roi-muted md:block"><%= reservation.note %></p>
               <p class="text-right text-sm text-roi-muted">
-                <span class="text-roi-text"><%= reservation[:covers] %></span>
+                <span class="text-roi-text"><%= reservation.covers %></span>
                 <span class="ml-1 hidden sm:inline">covers</span>
               </p>
             </li>

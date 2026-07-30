@@ -1,4 +1,4 @@
-<%# locals: (name: "Priya N.", hidden: false) %>
+<%# locals: (name: "Priya N.", hidden: false, reason: nil) %>
 <div data-pin-modal-target="modal"
      data-action="click->pin-modal#backdrop keydown@window->pin-modal#keydown"
      class="fixed inset-0 z-50 <%= hidden ? "hidden" : "flex" %> items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
@@ -13,7 +13,8 @@
       Cut <%= name %>?
     </h2>
     <p class="mx-auto mt-4 max-w-sm text-center text-sm leading-relaxed text-roi-muted">
-      Bar load is winding down and late demand is predicted soft. Enter the 4-digit manager code to approve.
+      <%= reason.presence || "Bar load is winding down and late demand is predicted soft." %>
+      Enter the 4-digit manager code to approve.
     </p>
 
     <div class="mt-8 flex justify-center gap-3" aria-label="PIN entry">
@@ -47,9 +48,17 @@
       </button>
     </div>
 
+    <p data-pin-modal-target="error" class="mt-4 hidden text-center text-sm text-roi-danger">Enter all 4 digits</p>
+
+    <button type="button"
+            data-action="pin-modal#submit"
+            class="mt-4 w-full rounded-xl bg-roi-btn py-3 text-sm font-medium text-roi-btn-text transition-opacity hover:opacity-90">
+      Approve cut
+    </button>
+
     <button type="button"
             data-action="pin-modal#close"
-            class="mt-6 w-full text-center text-sm text-roi-muted transition-colors hover:text-roi-text">
+            class="mt-3 w-full text-center text-sm text-roi-muted transition-colors hover:text-roi-text">
       Cancel
     </button>
   </div>

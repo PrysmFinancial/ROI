@@ -33,6 +33,13 @@ These block specific engine tasks across sprints, so they're tracked here rather
 - [ ] **DEP-01** — Squirrel or Omnivore: can it emit the table lifecycle stream, and do `food_delivered` and `table_available` exist in it?
   *Why it blocks:* Critical path for real data. MVP1 runs on synthetic events regardless, but pilot data quality depends on this answer.
   Blocks: **PILOT-02** (Sprint 4) · Owner: Kedi
+  *Status (2026-07-29):* Still undefined — Host P0 runs on seed/mock floor state. See also `docs/host-deferred.md`.
+
+## Host P0 follow-ups (tracked in `docs/host-deferred.md`)
+
+- [ ] Seating engine redesign beyond the simplified P0 stub
+- [ ] Cut pickup routing when a cut server’s tables clear
+- [ ] Server self-baseline hustle measure (vs themselves nightly) — not implementing capability gates yet
 
 ## Related open items from the seating engine spec
 
