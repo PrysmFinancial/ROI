@@ -13,6 +13,8 @@ class Shift < ApplicationRecord
   end
 
   def pacing_hold_active?
+    return false if rush_mode?
+
     pacing_hold_until.present? && pacing_hold_until.future?
   end
 

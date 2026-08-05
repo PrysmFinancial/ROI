@@ -4,7 +4,7 @@
      data-controller="pin-modal"
      data-pin-modal-auto-open-value="<%= @show_cut_modal %>"
      data-pin-modal-cut-url-value="<%= @cut ? host_approve_cut_path(@cut) : "" %>">
-  <%= render "host_header", active_tab: "floor", floor_metrics: @floor_metrics %>
+  <%= render "host_header", active_tab: "floor", floor_metrics: @floor_metrics, rush_mode: @shift.rush_mode? %>
 
   <main class="mx-auto grid max-w-7xl gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.9fr)] lg:gap-8 lg:px-8 lg:py-8">
     <section aria-labelledby="tonight-service-heading">
@@ -18,7 +18,13 @@
         </p>
       </div>
 
-      <% if @shift.pacing_hold_active? %>
+      <% if @shift.rush_mode? %>
+        <div class="mb-6 rounded-2xl border border-roi-accent/40 bg-roi-surface px-5 py-4">
+          <p class="text-sm text-roi-accent">
+            Rush mode on — pacing holds suspended floor-wide. Seats will be tagged.
+          </p>
+        </div>
+      <% elsif @shift.pacing_hold_active? %>
         <div class="mb-6 flex flex-col gap-3 rounded-2xl border border-roi-accent/40 bg-roi-surface px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <p class="text-sm text-roi-accent">
             Pacing hold active until <%= @shift.pacing_hold_until.strftime("%-l:%M %p") %>.
@@ -122,9 +128,7 @@
             <div class="mt-4 flex flex-col gap-2">
               <%= button_to "Confirm seat", host_confirm_seat_path(party), method: :post,
                     class: "rounded-xl bg-roi-btn px-4 py-2.5 text-sm font-medium text-roi-btn-text transition-opacity hover:opacity-90" %>
-              <button type="button" class="rounded-xl border border-roi-border px-4 py-2.5 text-sm text-roi-muted transition-colors hover:text-roi-text">
-                Offer alternate
-              </button>
+              <%= render "offer_alternate_modal", party: party, options: @alternate_options[party] || [] %>
             </div>
           </article>
         <% end %>

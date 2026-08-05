@@ -1,4 +1,4 @@
-<%# locals: (active_tab: "pre_shift", floor_metrics: nil) %>
+<%# locals: (active_tab: "pre_shift", floor_metrics: nil, rush_mode: false) %>
 <header class="border-b border-roi-border/70 px-6 py-4 md:px-8">
   <div class="flex flex-wrap items-center justify-between gap-4">
     <div class="flex min-w-[7rem] items-center gap-4">
@@ -37,13 +37,16 @@
         <% end %>
       </div>
 
-      <label class="ml-auto inline-flex cursor-pointer items-center gap-3 text-sm text-roi-muted">
-        <span>Rush mode</span>
-        <span class="relative inline-flex h-6 w-11 items-center rounded-full bg-roi-surface-raised">
-          <span class="absolute left-1 h-4 w-4 rounded-full bg-roi-muted"></span>
+      <%= button_to host_rush_path,
+            method: :post,
+            params: { rush_mode: !rush_mode },
+            class: "ml-auto inline-flex cursor-pointer items-center gap-3 text-sm #{rush_mode ? "text-roi-accent" : "text-roi-muted"}",
+            aria: { label: "Rush mode #{rush_mode ? "on" : "off"}" } do %>
+        <span>Rush mode<%= " · on" if rush_mode %></span>
+        <span class="relative inline-flex h-6 w-11 items-center rounded-full <%= rush_mode ? "bg-roi-accent" : "bg-roi-surface-raised" %>">
+          <span class="absolute h-4 w-4 rounded-full bg-roi-btn-text transition-all <%= rush_mode ? "left-6" : "left-1" %> <%= rush_mode ? "bg-white" : "bg-roi-muted" %>"></span>
         </span>
-        <input type="checkbox" class="sr-only" disabled aria-label="Rush mode">
-      </label>
+      <% end %>
     </div>
   <% end %>
 </header>

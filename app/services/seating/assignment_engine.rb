@@ -4,6 +4,10 @@ module Seating
       new(party).call
     end
 
+    def self.alternatives(party:)
+      new(party).alternatives
+    end
+
     def initialize(party)
       @party = party
       @shift = party.shift
@@ -27,6 +31,28 @@ module Seating
         status: "open"
       )
       recommendation
+    end
+
+    # Legal alternate table/server pairings for this party (excludes the current open recommendation).
+    def alternatives
+      current = party.seating_recommendation
+      options = []
+
+      eligible_server_shifts.each do |server_shift|
+        fitting_tables(server_shift).each do |table|
+          next if current&.status == "open" &&
+            current.dining_table_id == table.id &&
+            current.server_shift_id == server_shift.id
+
+          options << {
+            dining_table: table,
+            server_shift: server_shift,
+            label: "#{table.label} · #{server_shift.name}"
+          }
+        end
+      end
+
+      options.sort_by { |o| [ o[:dining_table].label, o[:server_shift].name ] }
     end
 
     private

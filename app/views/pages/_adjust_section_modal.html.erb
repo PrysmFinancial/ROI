@@ -1,0 +1,56 @@
+<%# locals: (section:, server_shifts:) %>
+<div data-controller="modal">
+  <button type="button"
+          data-action="modal#open"
+          class="mt-5 inline-flex items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-roi-muted transition-colors hover:text-roi-text">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 12h9.75m-9.75 6h9.75M3.75 6h.008v.008H3.75V6Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.008v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 6h.008v.008H3.75V18Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+    </svg>
+    Adjust
+  </button>
+
+  <div data-modal-target="panel"
+       data-action="click->modal#backdrop keydown@window->modal#keydown"
+       class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="adjust-section-<%= section.id %>-title">
+    <div class="w-full max-w-md rounded-3xl border border-roi-border bg-roi-surface px-6 py-8 shadow-2xl md:px-8">
+      <p class="text-center text-[0.65rem] font-medium uppercase tracking-[0.22em] text-roi-muted">
+        Adjust section
+      </p>
+      <h2 id="adjust-section-<%= section.id %>-title" class="mt-3 text-center font-serif text-3xl text-roi-text">
+        <%= section.name %>
+      </h2>
+      <p class="mx-auto mt-3 max-w-sm text-center text-sm leading-relaxed text-roi-muted">
+        Assign a server on tonight&rsquo;s shift. If they already have a section, they move here.
+      </p>
+
+      <%= form_with url: host_adjust_section_path(section), method: :patch, class: "mt-6 space-y-4" do %>
+        <label class="block">
+          <span class="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-roi-muted">Server</span>
+          <select name="server_shift_id"
+                  required
+                  class="mt-2 w-full rounded-xl border border-roi-border bg-roi-bg px-4 py-3 text-sm text-roi-text">
+            <% server_shifts.each do |ss| %>
+              <option value="<%= ss.id %>" <%= "selected" if section.server_shift_id == ss.id %>>
+                <%= ss.name %><%= " (current)" if section.server_shift_id == ss.id %>
+              </option>
+            <% end %>
+          </select>
+        </label>
+
+        <button type="submit"
+                class="w-full rounded-xl bg-roi-btn py-3 text-sm font-medium text-roi-btn-text transition-opacity hover:opacity-90">
+          Save assignment
+        </button>
+      <% end %>
+
+      <button type="button"
+              data-action="modal#close"
+              class="mt-3 w-full text-center text-sm text-roi-muted transition-colors hover:text-roi-text">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
