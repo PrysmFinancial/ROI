@@ -27,7 +27,8 @@ module Host
           lifecycle: "seated",
           dining_table: table,
           server_shift: server_shift,
-          queue_position: nil
+          queue_position: nil,
+          rush_tagged: shift.rush_mode?
         )
         recommendation.update!(status: "accepted")
         server_shift.increment!(:covers_tonight, party.covers)

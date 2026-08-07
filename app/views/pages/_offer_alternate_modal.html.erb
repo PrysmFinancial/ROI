@@ -1,0 +1,73 @@
+<%# locals: (party:, options:) %>
+<div data-controller="modal">
+  <button type="button"
+          data-action="modal#open"
+          class="w-full rounded-xl border border-roi-border px-4 py-2.5 text-sm text-roi-muted transition-colors hover:text-roi-text"
+          <%= "disabled" if options.blank? %>>
+    Offer alternate
+  </button>
+
+  <div data-modal-target="panel"
+       data-action="click->modal#backdrop keydown@window->modal#keydown"
+       class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="offer-alternate-<%= party.id %>-title">
+    <div class="w-full max-w-md rounded-3xl border border-roi-border bg-roi-surface px-6 py-8 shadow-2xl md:px-8">
+      <p class="text-center text-[0.65rem] font-medium uppercase tracking-[0.22em] text-roi-muted">
+        Override recommendation
+      </p>
+      <h2 id="offer-alternate-<%= party.id %>-title" class="mt-3 text-center font-serif text-3xl text-roi-text">
+        <%= party.name %>
+      </h2>
+      <p class="mx-auto mt-3 max-w-sm text-center text-sm leading-relaxed text-roi-muted">
+        Pick a legal alternate. A reason is required and will be logged.
+      </p>
+
+      <% if options.blank? %>
+        <p class="mt-6 text-center text-sm text-roi-danger">No legal alternates available.</p>
+        <button type="button"
+                data-action="modal#close"
+                class="mt-4 w-full text-center text-sm text-roi-muted transition-colors hover:text-roi-text">
+          Close
+        </button>
+      <% else %>
+        <%= form_with url: host_offer_alternate_path(party), method: :post, class: "mt-6 space-y-4" do %>
+          <label class="block">
+            <span class="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-roi-muted">Alternate</span>
+            <select name="pairing"
+                    required
+                    class="mt-2 w-full rounded-xl border border-roi-border bg-roi-bg px-4 py-3 text-sm text-roi-text">
+              <option value="">Select table · server</option>
+              <% options.each do |option| %>
+                <option value="<%= option[:dining_table].id %>:<%= option[:server_shift].id %>">
+                  <%= option[:label] %>
+                </option>
+              <% end %>
+            </select>
+          </label>
+
+          <label class="block">
+            <span class="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-roi-muted">Reason</span>
+            <textarea name="override_reason"
+                      required
+                      rows="3"
+                      placeholder="Why not the recommended seat?"
+                      class="mt-2 w-full rounded-xl border border-roi-border bg-roi-bg px-4 py-3 text-sm text-roi-text placeholder:text-roi-muted"></textarea>
+          </label>
+
+          <button type="submit"
+                  class="w-full rounded-xl bg-roi-btn py-3 text-sm font-medium text-roi-btn-text transition-opacity hover:opacity-90">
+            Seat alternate
+          </button>
+        <% end %>
+
+        <button type="button"
+                data-action="modal#close"
+                class="mt-3 w-full text-center text-sm text-roi-muted transition-colors hover:text-roi-text">
+          Cancel
+        </button>
+      <% end %>
+    </div>
+  </div>
+</div>
