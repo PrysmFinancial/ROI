@@ -1,28 +1,61 @@
-# Host deferred work
+# Host deferred / unfinished work
 
-Notes from Host P0 follow-ups. Not blocking current Host loops.
+Living checklist of what Host P0/P1 did **not** do. Update as items land.
+Source docs: seating spec, system overview, glossary, `docs/sprint/`, Host1–4 screenshots.
 
-## Seating engine redesign (come back)
+---
 
-P0 ships a **simplified** `Seating::AssignmentEngine`:
+## Done in P0 (for orientation)
 
-- Hard: exclude cut servers; require an open table that fits party size
-- Soft: prefer sections with more open tables, then lower covers, then start order
+- Domain models + seed for Host Pre-shift / Confirmations / Floor
+- Persist confirmation outcomes (`pending` + `no_answer` = pending counter)
+- Approve all section assignments (soft lock; seating not hard-blocked)
+- Confirm seat via simplified `Seating::AssignmentEngine`
+- Pacing confirm / decline + hold gate + **clear hold**
+- Cut PIN via **Manager** records (multiple PINs); records who approved
+- Switch role + Host tab nav
 
-We still need a fuller redesign later that implements the seating-spec six-check model (fairness band, idle boost, projected availability, efficiency / covers-per-hour vs personal baseline, VIP/recovery pre-filter, combinable large-party fit). Keep the service boundary so Host UI does not need to change when the engine deepens.
+---
 
-## Cut pickup routing (come back)
+## Done in P1
 
-When a cut is approved, the server stops getting new tables and finishes current ones. **Not yet implemented:** as each of their tables clears (`table_available`), automatically hand that table/section work to the nearest active server (pickup tables). Track and build after the POS/event backbone or a mock event publisher exists.
+- **Adjust section** — simple modal; reassign server on shift (moves them off any prior section)
+- **Offer alternate** — legal options from engine; **reason required**; recommendation status `overridden` + `override_reason`
+- **Rush mode** — floor-wide toggle (**D-04 resolved**); clears/suspends pacing holds; tags seats via `parties.rush_tagged`
 
-## Server self-baseline / hustle (not yet)
+---
 
-`capability_score` / strong-vs-weak routing is **deferred**. Product intent: measure each server against **themselves** night over night (covers/hr vs personal baseline) to see who is hustling — not a blunt peer headcount race. Do not implement VIP/large-party capability gates until this measure is defined in product + seeded history exists.
+## Explicitly not done (carry forward)
 
-## POS event stream
+### Engine / floor (later)
 
-Not defined yet. MVP continues on seed/mock floor state. Live Squirrel (or Omnivore) lifecycle events remain an open dependency (`docs/sprint/open-decisions.md` DEP-01).
+| Item | Notes |
+|------|--------|
+| **Seating engine redesign** | Replace P0 stub with six-check pipeline (hard filters + soft scores). Keep `Seating::AssignmentEngine` boundary. |
+| **Cut pickup routing** | After cut, cleared tables hand to nearest active server. Needs table-clear events (mock or POS). |
+| **VIP / HNW / recovery routing + table holds** | Spec: route to strong servers; hold table until +15m past booking. Blocked on capability/self-baseline measure (below). |
+| **Combinable / large-party fit** | Section fit using combinable flags (ROI Internal floor editor in sprint plan). |
+| **Server self-baseline / hustle** | Measure each server vs **themselves** nightly (covers/hr vs personal baseline). Not peer headcount. Do not implement capability gates until this exists. |
+| **Live metrics** | Replace remaining hardcoded Floor/Pre-shift KPIs (covers/hr, walk-in forecast, etc.) with aggregations. |
+| **Book detail drill-in** | Not in P0/P1. |
+| **Decision / recommendation audit UI** | Spec: log declined pacing and unused cut recs; H-03b decision log. Override reason is stored; no audit UI yet. |
+| **Adjust section UX polish** | Simple modal shipped; refine if hosts give feedback. |
+| **POS / event stream** | Undefined (`DEP-01`). Stay on seed/mock until defined. |
+| **Greeter-limited Host** | Separate role; out of current Host head-host scope. |
+| **Manager surface** | Out of scope for this Host track. |
 
-## Fairness / idle thresholds
+### Open decisions (do not assume)
 
-Use seating-spec suggestions (e.g. ~15% fairness band, ~8 min idle) when the fuller engine is built, unless docs state otherwise.
+From `docs/sprint/open-decisions.md` + seating spec:
+
+- **D-01** Skill/capability formula — blocks VIP/large-party gates
+- **D-02 / D-03** Fairness band % / idle minutes — use doc suggestions when building fuller engine unless docs say otherwise
+- **DEP-01** POS event availability — not defined yet
+
+---
+
+## Progress log
+
+- **2026-07-29** — Host P0 landed on `feature/host-p0` (models, confirmations, approve sections, confirm seat, pacing + clear hold, multi-manager cut PIN).
+- **2026-07-29** — Clarifications: multi-manager PINs; pending counter OK; engine stub OK with redesign note; screenshots = mock data only; clear hold added; cut pickup deferred; hustle = self-vs-self (not building yet).
+- **2026-08-05** — Host P1: floor-wide rush, offer alternate + required reason, simple adjust-section modal. D-04 resolved floor-wide.

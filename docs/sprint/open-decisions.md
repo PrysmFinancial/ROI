@@ -14,9 +14,10 @@ These block specific engine tasks across sprints, so they're tracked here rather
   *Why it blocks:* Drives the availability score — needs a confirmed default to compute against.
   Blocks: **E-08** (Sprint 2) · Owner: Kedi
 
-- [ ] **D-04** — Rush mode scope: floor-wide or targeted at one server.
+- [x] **D-04** — Rush mode scope: floor-wide or targeted at one server.
   *Why it blocks:* Changes how the rush toggle is built and how rush tagging is scoped in R-01.
   Blocks: **R-01** (Sprint 3) · Owner: Kedi
+  *Resolved (2026-08-05):* **Floor-wide.** Suspend pacing holds for the whole floor; tag seats made during rush (`parties.rush_tagged`) so they don’t distort baselines.
 
 - [ ] **D-05** — New server rotation insertion: confirm a newly-started server takes the very next table, then resumes the normal cycle.
   *Why it blocks:* Determines the rotation pointer behaviour in E-05.

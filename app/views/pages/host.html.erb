@@ -61,13 +61,7 @@
                 <p class="mt-0.5 text-sm text-roi-muted"><%= section.table_summary %></p>
               </div>
             </div>
-            <button type="button"
-                    class="mt-5 inline-flex items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-roi-muted transition-colors hover:text-roi-text">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 12h9.75m-9.75 6h9.75M3.75 6h.008v.008H3.75V6Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.008v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 6h.008v.008H3.75V18Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-              </svg>
-              Adjust
-            </button>
+            <%= render "adjust_section_modal", section: section, server_shifts: @server_shifts %>
           </article>
         <% end %>
       </div>

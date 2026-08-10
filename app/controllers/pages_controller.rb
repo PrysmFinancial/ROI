@@ -17,6 +17,7 @@ class PagesController < ApplicationController
 
     @sections = @shift.sections.includes(:server_shift, :dining_tables)
     @reservations = @shift.parties.for_book.limit(7)
+    @server_shifts = @shift.server_shifts.active.includes(:server).order(:start_order)
   end
 
   def host_floor
@@ -49,8 +50,9 @@ class PagesController < ApplicationController
     end
 
     @queue = @shift.parties.in_queue.includes(seating_recommendation: [ :dining_table, { server_shift: :server } ])
-    @pacing = @shift.open_pacing_recommendation
+    @pacing = @shift.rush_mode? ? nil : @shift.open_pacing_recommendation
     @cut = @shift.open_cut_recommendation
+    @alternate_options = @queue.index_with { |party| Seating::AssignmentEngine.alternatives(party: party) }
   end
 
   def host_confirmations
