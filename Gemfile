@@ -41,7 +41,7 @@ gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # Stay on 1.x until libvips is available in every local/dev environment (2.x requires ruby-vips at boot).
-gem "image_processing", "~> 2.0"
+gem "image_processing", "~> 1.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

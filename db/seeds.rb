@@ -5,6 +5,7 @@ ActiveRecord::Base.transaction do
   SeatingRecommendation.delete_all
   PacingRecommendation.delete_all
   CutRecommendation.delete_all
+  DecisionEvent.delete_all
   Party.delete_all
   DiningTable.delete_all
   Section.delete_all
@@ -20,7 +21,9 @@ ActiveRecord::Base.transaction do
     service_date: Date.new(2026, 6, 6),
     location_name: "The Hearth Room",
     rush_mode: false,
-    sections_approved: false
+    sections_approved: false,
+    walk_in_forecast: 28,
+    walk_in_forecast_detail: "peak 8–9 pm"
   )
 
   servers = {
@@ -50,13 +53,13 @@ ActiveRecord::Base.transaction do
 
   tables = {}
   {
-    window: [ [ "T11", 2 ], [ "T12", 4 ], [ "T13", 2 ], [ "T14", 4 ] ],
-    dining_front: [ [ "T21", 2 ], [ "T22", 4 ] ],
-    dining_back: [ [ "T23", 4 ], [ "T24", 6 ] ],
-    bar: [ [ "B1", 2 ], [ "B2", 2 ], [ "B3", 2 ], [ "B4", 2 ] ]
+    window: [ [ "T11", 2, false ], [ "T12", 4, true ], [ "T13", 2, true ], [ "T14", 4, false ] ],
+    dining_front: [ [ "T21", 2, false ], [ "T22", 4, false ] ],
+    dining_back: [ [ "T23", 4, true ], [ "T24", 6, true ] ],
+    bar: [ [ "B1", 2, false ], [ "B2", 2, false ], [ "B3", 2, false ], [ "B4", 2, false ] ]
   }.each do |section_key, defs|
-    defs.each do |label, capacity|
-      tables[label] = DiningTable.create!(section: sections[section_key], label:, capacity:, status: "open")
+    defs.each do |label, capacity, combinable|
+      tables[label] = DiningTable.create!(section: sections[section_key], label:, capacity:, combinable:, status: "open")
     end
   end
 

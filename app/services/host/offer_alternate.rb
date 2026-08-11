@@ -43,6 +43,13 @@ module Host
           override_reason: reason
         )
         server_shift.increment!(:covers_tonight, party.covers)
+        Host::LogDecision.call(
+          shift:,
+          party:,
+          kind: "seating_overridden",
+          summary: "Override #{party.name} → #{dining_table.label} · #{server_shift.name}",
+          detail: reason
+        )
       end
 
       party

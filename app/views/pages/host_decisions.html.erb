@@ -1,0 +1,45 @@
+<% content_for :title, "ROI — Host · Decisions" %>
+
+<div class="min-h-screen">
+  <%= render "host_header", active_tab: "decisions" %>
+
+  <main class="mx-auto max-w-3xl px-6 py-8 md:px-8 md:py-10">
+    <div class="mb-8">
+      <p class="text-[0.65rem] font-medium uppercase tracking-[0.22em] text-roi-muted">
+        Tonight · decision log
+      </p>
+      <h1 class="mt-2 font-serif text-4xl text-roi-text md:text-5xl">Decisions</h1>
+      <p class="mt-3 max-w-xl text-sm leading-relaxed text-roi-muted">
+        Seating accepts and overrides, pacing outcomes, cuts, and mock pickups for this shift.
+      </p>
+    </div>
+
+    <% if @decision_events.empty? %>
+      <p class="rounded-2xl border border-roi-border bg-roi-surface px-5 py-8 text-center text-sm text-roi-muted">
+        No decisions logged yet. Confirm a seat, override, pacing, or cut to populate this list.
+      </p>
+    <% else %>
+      <ul class="space-y-3" role="list">
+        <% @decision_events.each do |event| %>
+          <li class="rounded-2xl border border-roi-border bg-roi-surface px-5 py-4">
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <p class="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-roi-accent">
+                <%= event.kind_label %>
+              </p>
+              <time class="text-xs text-roi-muted" datetime="<%= event.created_at.iso8601 %>">
+                <%= event.created_at.strftime("%-l:%M %p") %>
+              </time>
+            </div>
+            <p class="mt-2 text-roi-text"><%= event.summary %></p>
+            <% if event.detail.present? %>
+              <p class="mt-1 text-sm text-roi-muted"><%= event.detail %></p>
+            <% end %>
+            <% if event.party %>
+              <p class="mt-2 text-xs text-roi-muted">Party · <%= event.party.name %></p>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </main>
+</div>

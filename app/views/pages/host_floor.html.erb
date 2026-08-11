@@ -75,6 +75,12 @@
                       <%= table[:covers] %> covers<%= " · #{table[:seated]}" if table[:seated] %>
                     <% end %>
                   </p>
+                  <% if table[:mock_pickup] %>
+                    <%= button_to "Mock clear → pickup",
+                          host_mock_pickup_path(table[:record_id]),
+                          method: :post,
+                          class: "mt-3 w-full rounded-lg border border-roi-border px-2 py-1.5 text-[0.65rem] font-medium uppercase tracking-[0.12em] text-roi-muted transition-colors hover:text-roi-text" %>
+                  <% end %>
                 </article>
               <% end %>
             </div>
