@@ -1,49 +1,43 @@
 class PagesController < ApplicationController
-  before_action :require_shift, only: %i[host host_floor host_confirmations]
+  before_action :require_shift, only: %i[host host_floor host_confirmations host_decisions]
 
   def opening
   end
 
   def host
     @shift = current_shift
-    pending = @shift.parties.where(confirmation_status: %w[pending no_answer]).where(source: "reservation").count
-
-    @metrics = [
-      { label: "Covers booked", value: @shift.parties.sum(:covers).to_s, detail: "across #{@shift.parties.where(source: "reservation").count} reservations", accent: false },
-      { label: "Staff on", value: @shift.server_shifts.count.to_s, detail: "#{@shift.server_shifts.count - 1} servers · 1 floater", accent: false },
-      { label: "Confirmations pending", value: pending.to_s, detail: "call before 5:30", accent: true },
-      { label: "Walk-ins forecast", value: "~28", detail: "peak 8–9 pm", accent: false }
-    ]
-
-    @sections = @shift.sections.includes(:server_shift, :dining_tables)
-    @reservations = @shift.parties.for_book.limit(7)
+    @metrics = Host::Metrics.pre_shift(@shift)
+    @sections = @shift.sections.includes(:server_shift, :pickup_server_shift, :dining_tables)
+    @book_parties = @shift.parties.for_book
+    @reservations = @book_parties.limit(7)
     @server_shifts = @shift.server_shifts.active.includes(:server).order(:start_order)
   end
 
   def host_floor
     @shift = current_shift
     @show_cut_modal = params[:cut] == "1" || flash[:show_cut_modal]
-    @floor_metrics = [
-      { label: "Covers", value: @shift.parties.where(lifecycle: "seated").sum(:covers).to_s },
-      { label: "Covers / hr", value: "11.4" },
-      { label: "Servers on", value: @shift.server_shifts.active.count.to_s },
-      { label: "Waitlist", value: "#{@shift.parties.in_queue.count} · 25 min" }
-    ]
+    @floor_metrics = Host::Metrics.floor(@shift)
 
-    @server_rows = @shift.sections.includes(:server_shift, :dining_tables).filter_map do |section|
+    @server_rows = @shift.sections.includes(:server_shift, :pickup_server_shift, :dining_tables).filter_map do |section|
       next unless section.server_shift
 
+      cut = section.server_shift.cut_status == "approved"
+      pickup_note = section.pickup_server_shift ? " · pickup #{section.pickup_server_shift.name}" : ""
+      cut_note = cut ? " · cut" : ""
+
       {
-        label: "#{section.server_shift.name} · #{section.name}",
+        label: "#{section.server_shift.name} · #{section.name}#{cut_note}#{pickup_note}",
         tables: section.dining_tables.map { |table|
           party = table.active_party
           {
+            record_id: table.id,
             id: table.label,
             capacity: table.capacity_label,
             guest: table.guest_label,
             covers: party&.covers,
             seated: table.seated_duration_label,
-            status: table.status.to_sym
+            status: table.status.to_sym,
+            mock_pickup: cut && table.status == "seated"
           }
         }
       }
@@ -59,6 +53,11 @@ class PagesController < ApplicationController
     @shift = current_shift
     @confirmation_counts = @shift.confirmation_counts
     @confirmation_calls = @shift.parties.for_confirmation_calls
+  end
+
+  def host_decisions
+    @shift = current_shift
+    @decision_events = @shift.decision_events.includes(:party).order(created_at: :desc, id: :desc)
   end
 
   def manager

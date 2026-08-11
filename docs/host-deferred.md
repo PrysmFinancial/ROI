@@ -1,16 +1,16 @@
 # Host deferred / unfinished work
 
-Living checklist of what Host P0/P1 did **not** do. Update as items land.
+Living checklist of what Host P0–P2 did **not** do. Update as items land.
 Source docs: seating spec, system overview, glossary, `docs/sprint/`, Host1–4 screenshots.
 
 ---
 
-## Done in P0 (for orientation)
+## Done in P0
 
 - Domain models + seed for Host Pre-shift / Confirmations / Floor
 - Persist confirmation outcomes (`pending` + `no_answer` = pending counter)
 - Approve all section assignments (soft lock; seating not hard-blocked)
-- Confirm seat via simplified `Seating::AssignmentEngine`
+- Confirm seat via `Seating::AssignmentEngine`
 - Pacing confirm / decline + hold gate + **clear hold**
 - Cut PIN via **Manager** records (multiple PINs); records who approved
 - Switch role + Host tab nav
@@ -19,43 +19,47 @@ Source docs: seating spec, system overview, glossary, `docs/sprint/`, Host1–4 
 
 ## Done in P1
 
-- **Adjust section** — simple modal; reassign server on shift (moves them off any prior section)
-- **Offer alternate** — legal options from engine; **reason required**; recommendation status `overridden` + `override_reason`
-- **Rush mode** — floor-wide toggle (**D-04 resolved**); clears/suspends pacing holds; tags seats via `parties.rush_tagged`
+- **Adjust section** — simple modal; reassign server on shift
+- **Offer alternate** — legal options; **reason required**; `overridden` + `override_reason`
+- **Rush mode** — floor-wide (**D-04**); suspends pacing holds; `parties.rush_tagged`
+
+---
+
+## Done in P2
+
+- **Live metrics** — Pre-shift / Floor KPIs from shift seed + aggregations (`Host::Metrics`)
+- **Host Decisions** — `decision_events` list (accept, override, pacing, cut, pickup)
+- **Book detail** — click row → modal with existing fields (no guest history yet)
+- **Engine closer to six-check** — cut protection + section fit (incl. combinable); soft scores fairness (15%), idle (8m), projected availability, efficiency (equal weights). VIP/capability hard filters still off (**D-01** / hustle)
+- **Mock cut pickup** — “Mock clear → pickup” on cut server’s seated tables; nearest by section position
 
 ---
 
 ## Explicitly not done (carry forward)
 
-### Engine / floor (later)
-
 | Item | Notes |
 |------|--------|
-| **Seating engine redesign** | Replace P0 stub with six-check pipeline (hard filters + soft scores). Keep `Seating::AssignmentEngine` boundary. |
-| **Cut pickup routing** | After cut, cleared tables hand to nearest active server. Needs table-clear events (mock or POS). |
-| **VIP / HNW / recovery routing + table holds** | Spec: route to strong servers; hold table until +15m past booking. Blocked on capability/self-baseline measure (below). |
-| **Combinable / large-party fit** | Section fit using combinable flags (ROI Internal floor editor in sprint plan). |
-| **Server self-baseline / hustle** | Measure each server vs **themselves** nightly (covers/hr vs personal baseline). Not peer headcount. Do not implement capability gates until this exists. |
-| **Live metrics** | Replace remaining hardcoded Floor/Pre-shift KPIs (covers/hr, walk-in forecast, etc.) with aggregations. |
-| **Book detail drill-in** | Not in P0/P1. |
-| **Decision / recommendation audit UI** | Spec: log declined pacing and unused cut recs; H-03b decision log. Override reason is stored; no audit UI yet. |
-| **Adjust section UX polish** | Simple modal shipped; refine if hosts give feedback. |
-| **POS / event stream** | Undefined (`DEP-01`). Stay on seed/mock until defined. |
-| **Greeter-limited Host** | Separate role; out of current Host head-host scope. |
-| **Manager surface** | Out of scope for this Host track. |
+| **VIP / HNW / recovery hard filters + table holds** | Blocked on **D-01** / self-baseline hustle |
+| **Server self-baseline / hustle** | Self-vs-self nightly measure before capability gates |
+| **Full F-11 stage audit / Q-01 replay** | Host Decisions is a simple list; not pool→eliminations→score replay |
+| **Real POS table-clear events** | Mock pickup only until **DEP-01** |
+| **Cut pickup geometry** | Nearest = section position proximity; no floor map distances |
+| **Adjust section UX polish** | Refine if hosts give feedback |
+| **Greeter-limited Host** | Out of head-host scope |
+| **Manager surface** | Out of Host track |
+| **New-server rotation (D-05)** / **strong erosion (D-06)** | Still open |
 
 ### Open decisions (do not assume)
 
-From `docs/sprint/open-decisions.md` + seating spec:
-
-- **D-01** Skill/capability formula — blocks VIP/large-party gates
-- **D-02 / D-03** Fairness band % / idle minutes — use doc suggestions when building fuller engine unless docs say otherwise
-- **DEP-01** POS event availability — not defined yet
+- **D-01** Skill/capability formula — VIP/large-party gates still off
+- **D-05 / D-06** — rotation insertion / strong erosion
+- **DEP-01** POS event availability
 
 ---
 
 ## Progress log
 
-- **2026-07-29** — Host P0 landed on `feature/host-p0` (models, confirmations, approve sections, confirm seat, pacing + clear hold, multi-manager cut PIN).
-- **2026-07-29** — Clarifications: multi-manager PINs; pending counter OK; engine stub OK with redesign note; screenshots = mock data only; clear hold added; cut pickup deferred; hustle = self-vs-self (not building yet).
-- **2026-08-05** — Host P1: floor-wide rush, offer alternate + required reason, simple adjust-section modal. D-04 resolved floor-wide.
+- **2026-07-29** — Host P0 on `feature/host-p0`
+- **2026-07-29** — Clarifications: multi-manager PINs; clear hold; hustle = self-vs-self
+- **2026-08-05** — Host P1: rush, offer alternate, adjust section. D-04 floor-wide
+- **2026-08-10** — Host P2: live metrics, decisions list, book modal, six-check engine pass (D-02/D-03 locked), mock cut pickup. Pinned `image_processing` back to `~> 1.2` (2.x needs ruby-vips at boot)

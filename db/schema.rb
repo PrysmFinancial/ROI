@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_05_191032) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_10_210000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -26,6 +26,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_05_191032) do
     t.index ["approved_by_manager_id"], name: "index_cut_recommendations_on_approved_by_manager_id"
     t.index ["server_shift_id"], name: "index_cut_recommendations_on_server_shift_id"
     t.index ["shift_id"], name: "index_cut_recommendations_on_shift_id"
+  end
+
+  create_table "decision_events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "detail", default: "", null: false
+    t.string "kind", null: false
+    t.bigint "party_id"
+    t.bigint "shift_id", null: false
+    t.string "summary", null: false
+    t.datetime "updated_at", null: false
+    t.index ["party_id"], name: "index_decision_events_on_party_id"
+    t.index ["shift_id", "created_at"], name: "index_decision_events_on_shift_id_and_created_at"
+    t.index ["shift_id"], name: "index_decision_events_on_shift_id"
   end
 
   create_table "dining_tables", force: :cascade do |t|
@@ -102,10 +115,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_05_191032) do
   create_table "sections", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.bigint "pickup_server_shift_id"
     t.integer "position", default: 0, null: false
     t.bigint "server_shift_id"
     t.bigint "shift_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["pickup_server_shift_id"], name: "index_sections_on_pickup_server_shift_id"
     t.index ["server_shift_id"], name: "index_sections_on_server_shift_id"
     t.index ["shift_id", "name"], name: "index_sections_on_shift_id_and_name", unique: true
     t.index ["shift_id"], name: "index_sections_on_shift_id"
@@ -145,12 +160,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_05_191032) do
     t.datetime "sections_approved_at"
     t.date "service_date", null: false
     t.datetime "updated_at", null: false
+    t.integer "walk_in_forecast", default: 0, null: false
+    t.string "walk_in_forecast_detail", default: "", null: false
     t.index ["service_date"], name: "index_shifts_on_service_date"
   end
 
   add_foreign_key "cut_recommendations", "managers", column: "approved_by_manager_id"
   add_foreign_key "cut_recommendations", "server_shifts"
   add_foreign_key "cut_recommendations", "shifts"
+  add_foreign_key "decision_events", "parties"
+  add_foreign_key "decision_events", "shifts"
   add_foreign_key "dining_tables", "sections"
   add_foreign_key "pacing_recommendations", "shifts"
   add_foreign_key "parties", "dining_tables"
@@ -160,6 +179,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_05_191032) do
   add_foreign_key "seating_recommendations", "parties"
   add_foreign_key "seating_recommendations", "server_shifts"
   add_foreign_key "sections", "server_shifts"
+  add_foreign_key "sections", "server_shifts", column: "pickup_server_shift_id"
   add_foreign_key "sections", "shifts"
   add_foreign_key "server_shifts", "servers"
   add_foreign_key "server_shifts", "shifts"

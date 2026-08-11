@@ -23,6 +23,12 @@ module Host
           approved_by_manager: manager
         )
         server_shift.update!(cut_status: "approved")
+        Host::LogDecision.call(
+          shift: recommendation.shift,
+          kind: "cut_approved",
+          summary: "Cut approved for #{server_shift.name}",
+          detail: "Manager #{manager.name}. #{recommendation.reason}"
+        )
       end
 
       recommendation

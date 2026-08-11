@@ -5,6 +5,7 @@ class Shift < ApplicationRecord
   has_many :parties, dependent: :destroy
   has_many :pacing_recommendations, dependent: :destroy
   has_many :cut_recommendations, dependent: :destroy
+  has_many :decision_events, dependent: :destroy
 
   validates :service_date, :location_name, presence: true
 

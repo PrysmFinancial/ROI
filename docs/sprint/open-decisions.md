@@ -6,13 +6,15 @@ These block specific engine tasks across sprints, so they're tracked here rather
   *Why it blocks:* The engine cannot run the large-party restriction or VIP routing without a concrete strong/weak number to compare against.
   Blocks: **E-04** (Sprint 1) · Owner: Kedi
 
-- [ ] **D-02** — Fairness band percent (spec suggests 15%) for how far ahead a server can get before a penalty applies.
+- [x] **D-02** — Fairness band percent (spec suggests 15%) for how far ahead a server can get before a penalty applies.
   *Why it blocks:* Sets when the fairness score starts re-ranking. Lives in config but still needs a starting value.
   Blocks: **E-08** (Sprint 2) · Owner: Kedi
+  *Resolved (2026-08-10):* **15%** locked in `Seating::Config::FAIRNESS_BAND` for Host P2.
 
-- [ ] **D-03** — Availability idle threshold (spec says 8 minutes) before an idle server is boosted.
+- [x] **D-03** — Availability idle threshold (spec says 8 minutes) before an idle server is boosted.
   *Why it blocks:* Drives the availability score — needs a confirmed default to compute against.
   Blocks: **E-08** (Sprint 2) · Owner: Kedi
+  *Resolved (2026-08-10):* **8 minutes** locked in `Seating::Config::IDLE_MINUTES` for Host P2.
 
 - [x] **D-04** — Rush mode scope: floor-wide or targeted at one server.
   *Why it blocks:* Changes how the rush toggle is built and how rush tagging is scoped in R-01.
@@ -36,11 +38,13 @@ These block specific engine tasks across sprints, so they're tracked here rather
   Blocks: **PILOT-02** (Sprint 4) · Owner: Kedi
   *Status (2026-07-29):* Still undefined — Host P0 runs on seed/mock floor state. See also `docs/host-deferred.md`.
 
-## Host P0 follow-ups (tracked in `docs/host-deferred.md`)
+## Host follow-ups (tracked in `docs/host-deferred.md`)
 
-- [ ] Seating engine redesign beyond the simplified P0 stub
-- [ ] Cut pickup routing when a cut server’s tables clear
-- [ ] Server self-baseline hustle measure (vs themselves nightly) — not implementing capability gates yet
+- [x] Host P2 engine pass: fairness 15%, idle 8m, combinable fit, soft equal weights *(D-02/D-03)*
+- [x] Mock cut pickup routing (until DEP-01)
+- [ ] VIP/capability hard filters — wait for self-baseline hustle + **D-01**
+- [ ] Full F-11 / Q-01 decision replay UI (Host Decisions list shipped in P2)
+- [ ] Server self-baseline hustle measure (vs themselves nightly)
 
 ## Related open items from the seating engine spec
 

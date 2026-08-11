@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get "host", to: "pages#host"
   get "host/confirmations", to: "pages#host_confirmations", as: :host_confirmations
   get "host/floor", to: "pages#host_floor", as: :host_floor
+  get "host/decisions", to: "pages#host_decisions", as: :host_decisions
   get "manager", to: "pages#manager"
 
   namespace :host do
@@ -18,6 +19,7 @@ Rails.application.routes.draw do
     post "pacing/:id/decline", to: "pacing#decline", as: :decline_pacing
     post "pacing/clear_hold", to: "pacing#clear_hold", as: :clear_pacing_hold
     post "cuts/:id/approve", to: "cuts#approve", as: :approve_cut
+    post "tables/:id/mock_pickup", to: "pickups#create", as: :mock_pickup
     post "rush", to: "rush#update", as: :rush
   end
 end

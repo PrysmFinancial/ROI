@@ -32,6 +32,12 @@ module Host
         )
         recommendation.update!(status: "accepted")
         server_shift.increment!(:covers_tonight, party.covers)
+        Host::LogDecision.call(
+          shift:,
+          party:,
+          kind: "seating_accepted",
+          summary: "Seated #{party.name} at #{table.label} · #{server_shift.name}"
+        )
       end
 
       party

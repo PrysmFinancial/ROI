@@ -19,6 +19,13 @@ module Host
         if decision == "confirmed"
           shift.update!(pacing_hold_until: recommendation.hold_minutes.minutes.from_now)
         end
+
+        Host::LogDecision.call(
+          shift:,
+          kind: decision == "confirmed" ? "pacing_confirmed" : "pacing_declined",
+          summary: "Pacing #{decision}: #{recommendation.message.truncate(80)}",
+          detail: recommendation.message
+        )
       end
 
       recommendation

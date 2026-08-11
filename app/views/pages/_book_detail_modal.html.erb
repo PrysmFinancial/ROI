@@ -1,0 +1,73 @@
+<%# locals: (party:) %>
+<div data-controller="modal">
+  <button type="button"
+          data-action="modal#open"
+          class="grid w-full grid-cols-[4.5rem_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-roi-surface-raised/60 md:grid-cols-[5rem_8rem_minmax(0,1fr)_auto] md:gap-6">
+    <time class="text-sm text-roi-muted"><%= party.reservation_time_label || "—" %></time>
+    <p class="truncate font-medium text-roi-text"><%= party.name %></p>
+    <p class="hidden truncate text-sm text-roi-muted md:block"><%= party.note %></p>
+    <p class="text-right text-sm text-roi-muted">
+      <span class="text-roi-text"><%= party.covers %></span>
+      <span class="ml-1 hidden sm:inline">covers</span>
+    </p>
+  </button>
+
+  <div data-modal-target="panel"
+       data-action="click->modal#backdrop keydown@window->modal#keydown"
+       class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="book-detail-<%= party.id %>-title">
+    <div class="w-full max-w-md rounded-3xl border border-roi-border bg-roi-surface px-6 py-8 shadow-2xl md:px-8">
+      <p class="text-center text-[0.65rem] font-medium uppercase tracking-[0.22em] text-roi-muted">
+        Reservation
+      </p>
+      <h2 id="book-detail-<%= party.id %>-title" class="mt-3 text-center font-serif text-3xl text-roi-text">
+        <%= party.name %>
+      </h2>
+
+      <dl class="mt-6 space-y-3 text-sm">
+        <div class="flex justify-between gap-4">
+          <dt class="text-roi-muted">Time</dt>
+          <dd class="text-roi-text"><%= party.reservation_time_label || "—" %></dd>
+        </div>
+        <div class="flex justify-between gap-4">
+          <dt class="text-roi-muted">Covers</dt>
+          <dd class="text-roi-text"><%= party.covers %></dd>
+        </div>
+        <div class="flex justify-between gap-4">
+          <dt class="text-roi-muted">Confirmation</dt>
+          <dd class="text-roi-text"><%= party.confirmation_status.tr("_", " ").titleize %></dd>
+        </div>
+        <div class="flex justify-between gap-4">
+          <dt class="text-roi-muted">Status</dt>
+          <dd class="text-roi-text"><%= party.lifecycle.titleize %></dd>
+        </div>
+        <% if party.note.present? %>
+          <div>
+            <dt class="text-roi-muted">Note</dt>
+            <dd class="mt-1 text-roi-text"><%= party.note %></dd>
+          </div>
+        <% end %>
+        <% if party.tags.any? %>
+          <div>
+            <dt class="text-roi-muted">Tags</dt>
+            <dd class="mt-2 flex flex-wrap gap-1.5">
+              <% party.tags.each do |tag| %>
+                <span class="rounded-full border border-roi-border px-2 py-0.5 text-[0.6rem] font-medium uppercase tracking-[0.12em] text-roi-muted">
+                  <%= tag %>
+                </span>
+              <% end %>
+            </dd>
+          </div>
+        <% end %>
+      </dl>
+
+      <button type="button"
+              data-action="modal#close"
+              class="mt-8 w-full rounded-xl border border-roi-border py-3 text-sm text-roi-muted transition-colors hover:text-roi-text">
+        Close
+      </button>
+    </div>
+  </div>
+</div>

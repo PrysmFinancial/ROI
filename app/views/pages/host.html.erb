@@ -71,21 +71,15 @@
       <div class="mb-4 flex items-baseline justify-between gap-4">
         <h2 id="the-book-heading" class="font-serif text-3xl text-roi-text">The book</h2>
         <p class="text-[0.65rem] font-medium uppercase tracking-[0.18em] text-roi-muted">
-          <%= @reservations.size %> of 58 shown
+          <%= @reservations.size %> of <%= @book_parties.size %> shown
         </p>
       </div>
 
       <div class="overflow-hidden rounded-2xl border border-roi-border bg-roi-surface">
         <ul class="divide-y divide-roi-border/80" role="list">
           <% @reservations.each do |reservation| %>
-            <li class="grid grid-cols-[4.5rem_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4 md:grid-cols-[5rem_8rem_minmax(0,1fr)_auto] md:gap-6">
-              <time class="text-sm text-roi-muted"><%= reservation.reservation_time_label || "—" %></time>
-              <p class="truncate font-medium text-roi-text"><%= reservation.name %></p>
-              <p class="hidden truncate text-sm text-roi-muted md:block"><%= reservation.note %></p>
-              <p class="text-right text-sm text-roi-muted">
-                <span class="text-roi-text"><%= reservation.covers %></span>
-                <span class="ml-1 hidden sm:inline">covers</span>
-              </p>
+            <li>
+              <%= render "book_detail_modal", party: reservation %>
             </li>
           <% end %>
         </ul>
