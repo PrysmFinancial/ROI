@@ -8,6 +8,10 @@ Rails.application.routes.draw do
   get "host/floor", to: "pages#host_floor", as: :host_floor
   get "host/decisions", to: "pages#host_decisions", as: :host_decisions
   get "manager", to: "pages#manager"
+  get "manager/staffing", to: "pages#manager_staffing", as: :manager_staffing
+  get "manager/performance", to: "pages#manager_performance", as: :manager_performance
+  get "manager/guests", to: "pages#manager_guests", as: :manager_guests
+  get "manager/no_shows", to: "pages#manager_no_shows", as: :manager_no_shows
 
   namespace :host do
     patch "confirmations/:id", to: "confirmations#update", as: :confirmation

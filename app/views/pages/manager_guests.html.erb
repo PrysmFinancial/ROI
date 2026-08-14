@@ -1,0 +1,50 @@
+<% content_for :title, "ROI — Manager · Guest intelligence" %>
+
+<div class="min-h-screen">
+  <%= render "manager_header", subtitle: "Ser Manager · iPad" %>
+
+  <main class="mx-auto max-w-4xl px-6 py-6 md:px-8 md:py-8">
+    <%= render "manager_back" %>
+
+    <div class="mb-6 rounded-xl border border-roi-accent/30 bg-roi-surface px-4 py-3 text-center text-[0.65rem] font-medium uppercase tracking-[0.18em] text-roi-accent">
+      Confidential · GM only · Not guest-facing
+    </div>
+
+    <h1 class="font-serif text-4xl text-roi-text md:text-5xl">Guest intelligence</h1>
+    <p class="mt-3 max-w-2xl text-sm leading-relaxed text-roi-muted">
+      Internal scores, spend, and history. Distinct from the guest&rsquo;s own profile — these numbers are never shown to the diner.
+    </p>
+
+    <ul class="mt-8 space-y-3" role="list">
+      <% @guests.each do |guest| %>
+        <li class="rounded-2xl border border-roi-border bg-roi-surface px-5 py-5">
+          <div class="flex flex-wrap items-start gap-4">
+            <div class="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-full border-2 <%= manager_score_ring(guest[:tone]) %>">
+              <span class="font-serif text-2xl leading-none"><%= guest[:score] %></span>
+              <span class="mt-0.5 text-[0.6rem] uppercase tracking-wide"><%= guest[:grade] %></span>
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="flex flex-wrap items-start justify-between gap-2">
+                <div>
+                  <p class="text-lg text-roi-text"><%= guest[:name] %></p>
+                  <p class="mt-1 text-sm text-roi-muted"><%= guest[:stats] %></p>
+                  <div class="mt-2 flex flex-wrap gap-1.5">
+                    <% guest[:tags].each do |tag| %>
+                      <span class="rounded-full border border-roi-border px-2 py-0.5 text-[0.6rem] font-medium uppercase tracking-[0.12em] text-roi-muted">
+                        <%= tag %>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+                <p class="text-sm text-roi-muted"><%= guest[:last] %></p>
+              </div>
+              <p class="mt-3 text-sm text-roi-text">
+                <span class="text-roi-muted">Internal note · </span><%= guest[:note] %>
+              </p>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </main>
+</div>

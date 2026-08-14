@@ -1,0 +1,77 @@
+<% content_for :title, "ROI — Manager · Staffing" %>
+
+<div class="min-h-screen">
+  <%= render "manager_header", subtitle: "Ser Manager · iPad" %>
+
+  <main class="mx-auto max-w-4xl px-6 py-6 md:px-8 md:py-8">
+    <%= render "manager_back" %>
+
+    <p class="roi-eyebrow">Staffing intelligence</p>
+    <h1 class="mt-2 font-serif text-4xl text-roi-text md:text-5xl">Tonight&rsquo;s staffing</h1>
+
+    <section class="mt-8 rounded-2xl border border-roi-border bg-roi-surface p-5 md:p-6" aria-labelledby="presift-heading">
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 id="presift-heading" class="text-lg text-roi-text">Pre-shift suggestion</h2>
+        <p class="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-roi-muted">
+          Forecast <%= @presift[:forecast] %>
+        </p>
+      </div>
+      <div class="mt-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <p class="max-w-2xl text-sm leading-relaxed text-roi-muted"><%= @presift[:body] %></p>
+        <button type="button"
+                class="inline-flex shrink-0 items-center justify-center rounded-full bg-roi-btn px-5 py-2.5 text-sm font-medium text-roi-btn-text opacity-90"
+                title="UI only — not wired">
+          Accept plan
+        </button>
+      </div>
+    </section>
+
+    <section class="mt-4 rounded-2xl border border-roi-border bg-roi-surface p-5 md:p-6" aria-labelledby="live-cut-heading">
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 id="live-cut-heading" class="text-lg text-roi-text">Live cut recommendation</h2>
+        <p class="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-roi-muted"><%= @cut[:time] %></p>
+      </div>
+
+      <div class="mt-5 flex flex-col gap-6 lg:flex-row lg:justify-between">
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-3">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-roi-border bg-roi-surface-raised font-serif text-xl text-roi-text">
+              <%= @cut[:initial] %>
+            </div>
+            <div>
+              <p class="text-lg text-roi-text"><%= @cut[:name] %> · <%= @cut[:section] %></p>
+              <p class="mt-0.5 text-sm text-roi-muted"><%= @cut[:meta] %></p>
+            </div>
+          </div>
+          <p class="mt-4 max-w-xl text-sm leading-relaxed text-roi-muted"><%= @cut[:reason] %></p>
+        </div>
+
+        <div class="w-full shrink-0 space-y-4 lg:w-56">
+          <div>
+            <div class="mb-1.5 flex justify-between text-sm">
+              <span class="text-roi-muted">Current floor load</span>
+              <span class="text-roi-text"><%= @cut[:floor_load_pct] %>%</span>
+            </div>
+            <div class="h-2 overflow-hidden rounded-full bg-roi-surface-raised">
+              <div class="h-full rounded-full bg-roi-success" style="width: <%= @cut[:floor_load_pct] %>%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="mb-1.5 flex justify-between text-sm">
+              <span class="text-roi-muted">Predicted late demand</span>
+              <span class="text-roi-muted"><%= @cut[:late_demand] %></span>
+            </div>
+            <div class="h-2 overflow-hidden rounded-full bg-roi-surface-raised">
+              <div class="h-full rounded-full bg-roi-info" style="width: <%= @cut[:late_pct] %>%"></div>
+            </div>
+          </div>
+          <button type="button"
+                  class="w-full rounded-full bg-roi-btn py-3 text-sm font-medium text-roi-btn-text opacity-90"
+                  title="UI only — not wired">
+            Approve cut
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
