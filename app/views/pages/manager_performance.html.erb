@@ -1,0 +1,67 @@
+<% content_for :title, "ROI — Manager · Performance" %>
+
+<div class="min-h-screen">
+  <%= render "manager_header", subtitle: "Ser Manager · iPad" %>
+
+  <main class="mx-auto max-w-6xl px-6 py-6 md:px-8 md:py-8">
+    <%= render "manager_back" %>
+
+    <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p class="roi-eyebrow">Server performance · Live</p>
+        <h1 class="mt-2 font-serif text-4xl text-roi-text md:text-5xl">The floor team</h1>
+      </div>
+      <p class="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-roi-muted">Ranked by covers / hr</p>
+    </div>
+
+    <div class="overflow-x-auto rounded-2xl border border-roi-border bg-roi-surface">
+      <table class="w-full min-w-[40rem] text-left text-sm">
+        <thead>
+          <tr class="border-b border-roi-border text-[0.6rem] font-medium uppercase tracking-[0.16em] text-roi-muted">
+            <th class="px-5 py-3 font-medium">Server</th>
+            <th class="px-3 py-3 font-medium">Covers</th>
+            <th class="px-3 py-3 font-medium">Cov / hr</th>
+            <th class="px-3 py-3 font-medium">Vs. baseline</th>
+            <th class="px-3 py-3 font-medium">Efficiency</th>
+            <th class="px-5 py-3 font-medium">Fairness</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-roi-border/80">
+          <% @performance_rows.each do |row| %>
+            <tr>
+              <td class="px-5 py-4">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-medium text-roi-text"><%= row[:name] %></span>
+                  <% if row[:badge] %>
+                    <span class="rounded-full border <%= row[:badge] == "Light" ? "border-roi-border text-roi-muted" : "border-roi-danger/60 text-roi-danger" %> px-2 py-0.5 text-[0.55rem] font-medium uppercase tracking-[0.12em]">
+                      <%= row[:badge] %>
+                    </span>
+                  <% end %>
+                </div>
+                <p class="mt-0.5 text-xs text-roi-muted"><%= row[:section] %></p>
+              </td>
+              <td class="px-3 py-4 text-roi-text"><%= row[:covers] %></td>
+              <td class="px-3 py-4 text-roi-text"><%= row[:cov_hr] %></td>
+              <td class="px-3 py-4 <%= manager_vs_tone(row[:vs_tone]) %>"><%= row[:vs_base] %> /hr</td>
+              <td class="px-3 py-4 text-roi-text"><%= row[:efficiency] %></td>
+              <td class="px-5 py-4">
+                <div class="flex items-center gap-3">
+                  <span class="w-8 text-roi-text"><%= row[:fairness] %>%</span>
+                  <div class="h-1.5 w-20 overflow-hidden rounded-full bg-roi-surface-raised">
+                    <div class="h-full rounded-full <%= manager_fairness_bar(row[:fairness]) %>"
+                         style="width: <%= row[:fairness] %>%"></div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="mt-6 max-w-3xl text-sm leading-relaxed text-roi-muted">
+      Fairness weighs covers and section difficulty so no one server is buried while another coasts.
+      Soren is flagged in the weeds — consider routing the next two parties elsewhere.
+    </p>
+  </main>
+</div>

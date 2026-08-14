@@ -1,0 +1,30 @@
+<% content_for :title, "ROI — Manager · No-shows" %>
+
+<div class="min-h-screen">
+  <%= render "manager_header", subtitle: "Ser Manager · iPad" %>
+
+  <main class="mx-auto max-w-3xl px-6 py-6 md:px-8 md:py-8">
+    <%= render "manager_back" %>
+
+    <p class="roi-eyebrow">No-show list</p>
+    <h1 class="mt-2 font-serif text-4xl text-roi-text md:text-5xl">Tonight&rsquo;s no-shows</h1>
+    <p class="mt-3 text-sm text-roi-muted">
+      <%= @no_shows.size %> tonight · guest-score effect (UI mock)
+    </p>
+
+    <ul class="mt-8 divide-y divide-roi-border/80 overflow-hidden rounded-2xl border border-roi-border bg-roi-surface" role="list">
+      <% @no_shows.each do |row| %>
+        <li class="flex flex-wrap items-start justify-between gap-3 px-5 py-4">
+          <div>
+            <p class="text-lg text-roi-text"><%= row[:name] %></p>
+            <p class="mt-1 text-sm text-roi-muted"><%= row[:note] %></p>
+          </div>
+          <div class="text-right text-sm">
+            <p class="text-roi-muted"><%= row[:time] %></p>
+            <p class="mt-1 text-roi-accent"><%= row[:effect] %></p>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </main>
+</div>

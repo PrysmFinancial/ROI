@@ -61,6 +61,29 @@ class PagesController < ApplicationController
   end
 
   def manager
+    @kpis = ManagerDemo.kpis
+    @floor_status = ManagerDemo.floor_status
+    @servers_on = ManagerDemo.servers_on
+    @pacing = ManagerDemo.pacing
+    @tonight_feed = ManagerDemo.tonight_feed
+    @tools = ManagerDemo.tools
+  end
+
+  def manager_staffing
+    @presift = ManagerDemo.staffing_presift
+    @cut = ManagerDemo.staffing_cut
+  end
+
+  def manager_performance
+    @performance_rows = ManagerDemo.performance_rows
+  end
+
+  def manager_guests
+    @guests = ManagerDemo.guests
+  end
+
+  def manager_no_shows
+    @no_shows = ManagerDemo.no_shows
   end
 
   private
