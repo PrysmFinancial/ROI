@@ -1,11 +1,12 @@
-<%# locals: (subtitle: nil, show_rush: false) %>
+<%# locals: (subtitle: nil, show_rush: false, rush_mode: false, location_name: nil) %>
+<% location = location_name.presence || @shift&.location_name || ManagerDemo::LOCATION %>
 <header class="border-b border-roi-border/70 px-6 py-4 md:px-8">
   <div class="flex flex-wrap items-center justify-between gap-4">
     <div class="min-w-[8rem]">
       <%= link_to manager_path, class: "block leading-none" do %>
         <span class="font-serif text-3xl tracking-wide text-roi-text">ROI</span>
         <span class="mt-0.5 block text-[0.6rem] font-medium uppercase tracking-[0.22em] text-roi-muted">
-          Ser Manager · <%= ManagerDemo::LOCATION %>
+          Ser Manager · <%= location %>
         </span>
       <% end %>
     </div>
@@ -20,12 +21,16 @@
       <%= link_to "Switch role", root_path,
             class: "text-[0.65rem] font-medium uppercase tracking-[0.18em] text-roi-muted transition-colors hover:text-roi-text" %>
       <% if show_rush %>
-        <span class="inline-flex items-center gap-3 text-sm text-roi-muted" title="UI only — not wired">
-          <span>Rush mode</span>
-          <span class="relative inline-flex h-6 w-11 items-center rounded-full bg-roi-surface-raised" aria-hidden="true">
-            <span class="absolute left-1 h-4 w-4 rounded-full bg-roi-muted"></span>
+        <%= button_to host_rush_path,
+              method: :post,
+              params: { rush_mode: !rush_mode, return_to: manager_path },
+              class: "inline-flex cursor-pointer items-center gap-3 text-sm #{rush_mode ? "text-roi-accent" : "text-roi-muted"}",
+              aria: { label: "Rush mode #{rush_mode ? "on" : "off"}" } do %>
+          <span>Rush mode<%= " · on" if rush_mode %></span>
+          <span class="relative inline-flex h-6 w-11 items-center rounded-full <%= rush_mode ? "bg-roi-accent" : "bg-roi-surface-raised" %>">
+            <span class="absolute h-4 w-4 rounded-full transition-all <%= rush_mode ? "left-6 bg-white" : "left-1 bg-roi-muted" %>"></span>
           </span>
-        </span>
+        <% end %>
       <% end %>
       <time class="hidden text-sm text-roi-muted sm:block" datetime="<%= Time.current.iso8601 %>">
         <%= Time.current.strftime("%-l:%M") %> · <%= Time.current.strftime("%a") %>

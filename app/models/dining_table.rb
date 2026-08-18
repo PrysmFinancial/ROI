@@ -1,5 +1,5 @@
 class DiningTable < ApplicationRecord
-  STATUSES = %w[open seated held].freeze
+  STATUSES = %w[open seated held bill].freeze
 
   belongs_to :section
   has_one :shift, through: :section
@@ -33,6 +33,7 @@ class DiningTable < ApplicationRecord
     party = active_party
     return "Open" if status == "open"
     return "Held · #{party.covers}" if status == "held" && party
+    return "Bill · #{party.name}" if status == "bill" && party
     return party.name if party
 
     "—"

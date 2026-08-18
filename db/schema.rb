@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_10_210000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_17_221500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -152,13 +152,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_10_210000) do
   end
 
   create_table "shifts", force: :cascade do |t|
+    t.integer "avg_turn_minutes", default: 0, null: false
+    t.integer "covers_vs_prior_pct", default: 0, null: false
     t.datetime "created_at", null: false
+    t.integer "kitchen_load_pct", default: 0, null: false
+    t.string "late_demand_label", default: "", null: false
+    t.integer "late_demand_pct", default: 0, null: false
     t.string "location_name", default: "The Hearth Room", null: false
+    t.integer "net_sales", default: 0, null: false
     t.datetime "pacing_hold_until"
     t.boolean "rush_mode", default: false, null: false
     t.boolean "sections_approved", default: false, null: false
     t.datetime "sections_approved_at"
     t.date "service_date", null: false
+    t.integer "turn_vs_prior_minutes", default: 0, null: false
     t.datetime "updated_at", null: false
     t.integer "walk_in_forecast", default: 0, null: false
     t.string "walk_in_forecast_detail", default: "", null: false

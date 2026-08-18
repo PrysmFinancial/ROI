@@ -1,5 +1,8 @@
 class PagesController < ApplicationController
-  before_action :require_shift, only: %i[host host_floor host_confirmations host_decisions]
+  before_action :require_shift, only: %i[
+    host host_floor host_confirmations host_decisions
+    manager manager_staffing manager_performance manager_guests manager_no_shows
+  ]
 
   def opening
   end
@@ -61,28 +64,28 @@ class PagesController < ApplicationController
   end
 
   def manager
-    @kpis = ManagerDemo.kpis
-    @floor_status = ManagerDemo.floor_status
-    @servers_on = ManagerDemo.servers_on
-    @pacing = ManagerDemo.pacing
-    @tonight_feed = ManagerDemo.tonight_feed
-    @tools = ManagerDemo.tools
+    @shift = current_shift
+    @dashboard = ManagerDashboard.call(shift: @shift)
   end
 
   def manager_staffing
+    @shift = current_shift
     @presift = ManagerDemo.staffing_presift
     @cut = ManagerDemo.staffing_cut
   end
 
   def manager_performance
+    @shift = current_shift
     @performance_rows = ManagerDemo.performance_rows
   end
 
   def manager_guests
+    @shift = current_shift
     @guests = ManagerDemo.guests
   end
 
   def manager_no_shows
+    @shift = current_shift
     @no_shows = ManagerDemo.no_shows
   end
 
