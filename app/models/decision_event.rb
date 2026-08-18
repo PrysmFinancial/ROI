@@ -6,6 +6,7 @@ class DecisionEvent < ApplicationRecord
     pacing_declined
     cut_approved
     pickup_assigned
+    pass_note
   ].freeze
 
   belongs_to :shift

@@ -1,11 +1,15 @@
 <% content_for :title, "ROI — Manager" %>
 
 <div class="min-h-screen">
-  <%= render "manager_header", subtitle: "Single-location dashboard", show_rush: true %>
+  <%= render "manager_header",
+        subtitle: "Single-location dashboard",
+        show_rush: true,
+        rush_mode: @dashboard[:rush_mode],
+        location_name: @dashboard[:location_name] %>
 
   <main class="mx-auto max-w-7xl space-y-8 px-6 py-6 md:px-8 md:py-8">
     <section class="grid grid-cols-2 gap-3 lg:grid-cols-6 lg:gap-4" aria-label="Tonight metrics">
-      <% @kpis.each do |kpi| %>
+      <% @dashboard[:kpis].each do |kpi| %>
         <article class="rounded-2xl border border-roi-border bg-roi-surface px-4 py-4 md:px-5">
           <p class="text-[0.6rem] font-medium uppercase tracking-[0.18em] text-roi-muted"><%= kpi[:label] %></p>
           <p class="mt-2 font-serif text-3xl text-roi-text md:text-4xl"><%= kpi[:value] %></p>
@@ -24,7 +28,7 @@
             <span class="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-roi-muted">Open floor plan ›</span>
           </div>
           <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <% @floor_status.each do |status| %>
+            <% @dashboard[:floor_status].each do |status| %>
               <article class="rounded-2xl border border-roi-border bg-roi-surface px-4 py-4">
                 <div class="flex items-center gap-2">
                   <span class="h-2.5 w-2.5 rounded-full <%= table_status_dot(status[:tone]) %>" aria-hidden="true"></span>
@@ -42,13 +46,13 @@
             <p class="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-roi-muted">Shift-start order</p>
           </div>
           <ul class="divide-y divide-roi-border/80 overflow-hidden rounded-2xl border border-roi-border bg-roi-surface" role="list">
-            <% @servers_on.each do |server| %>
+            <% @dashboard[:servers_on].each do |server| %>
               <li class="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
                 <div class="min-w-0">
                   <div class="flex flex-wrap items-center gap-2">
                     <p class="font-medium text-roi-text"><%= server[:name] %></p>
                     <% if server[:badge] %>
-                      <span class="rounded-full border border-roi-danger/60 px-2 py-0.5 text-[0.55rem] font-medium uppercase tracking-[0.12em] text-roi-danger">
+                      <span class="rounded-full border px-2 py-0.5 text-[0.55rem] font-medium uppercase tracking-[0.12em] <%= server[:badge] == "Light" ? "border-roi-border text-roi-muted" : "border-roi-danger/60 text-roi-danger" %>">
                         <%= server[:badge] %>
                       </span>
                     <% end %>
@@ -74,54 +78,66 @@
             <div>
               <div class="mb-1.5 flex justify-between text-sm">
                 <span class="text-roi-muted">Kitchen load</span>
-                <span class="text-roi-text"><%= @pacing[:kitchen_pct] %>%</span>
+                <span class="text-roi-text"><%= @dashboard[:pacing][:kitchen_pct] %>%</span>
               </div>
               <div class="h-2 overflow-hidden rounded-full bg-roi-surface-raised">
-                <div class="h-full rounded-full bg-roi-warning" style="width: <%= @pacing[:kitchen_pct] %>%"></div>
+                <div class="h-full rounded-full bg-roi-warning" style="width: <%= @dashboard[:pacing][:kitchen_pct] %>%"></div>
               </div>
             </div>
             <div>
               <div class="mb-1.5 flex justify-between text-sm">
                 <span class="text-roi-muted">Floor pacing</span>
-                <span class="text-roi-success"><%= @pacing[:floor_label] %></span>
+                <span class="<%= @dashboard[:pacing][:floor_pct] >= 70 ? "text-roi-warning" : "text-roi-success" %>">
+                  <%= @dashboard[:pacing][:floor_label] %>
+                </span>
               </div>
               <div class="h-2 overflow-hidden rounded-full bg-roi-surface-raised">
-                <div class="h-full rounded-full bg-roi-success" style="width: <%= @pacing[:floor_pct] %>%"></div>
+                <div class="h-full rounded-full <%= @dashboard[:pacing][:floor_pct] >= 70 ? "bg-roi-warning" : "bg-roi-success" %>"
+                     style="width: <%= @dashboard[:pacing][:floor_pct] %>%"></div>
               </div>
             </div>
             <div>
               <div class="mb-1.5 flex justify-between text-sm">
                 <span class="text-roi-muted">Predicted late demand</span>
-                <span class="text-roi-muted"><%= @pacing[:late_demand] %></span>
+                <span class="text-roi-muted"><%= @dashboard[:pacing][:late_demand] %></span>
               </div>
               <div class="h-2 overflow-hidden rounded-full bg-roi-surface-raised">
-                <div class="h-full rounded-full bg-roi-info" style="width: <%= @pacing[:late_pct] %>%"></div>
+                <div class="h-full rounded-full bg-roi-info" style="width: <%= @dashboard[:pacing][:late_pct] %>%"></div>
               </div>
             </div>
           </div>
 
-          <div class="mt-6 flex flex-col gap-3 rounded-xl border border-roi-border bg-roi-bg/50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <p class="text-sm text-roi-text">
-              Cut recommended — <span class="font-medium"><%= @pacing[:cut_name] %></span> at <%= @pacing[:cut_time] %>.
-            </p>
-            <%= link_to "Review", manager_staffing_path,
-                  class: "inline-flex shrink-0 items-center justify-center rounded-xl bg-roi-btn px-4 py-2 text-sm font-medium text-roi-btn-text transition-opacity hover:opacity-90" %>
-          </div>
+          <% if @dashboard[:pacing][:cut] %>
+            <div class="mt-6 flex flex-col gap-3 rounded-xl border border-roi-border bg-roi-bg/50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+              <p class="text-sm text-roi-text">
+                Cut recommended — <span class="font-medium"><%= @dashboard[:pacing][:cut][:name] %></span>
+                at <%= @dashboard[:pacing][:cut][:time] %>.
+              </p>
+              <%= link_to "Review", manager_staffing_path,
+                    class: "inline-flex shrink-0 items-center justify-center rounded-xl bg-roi-btn px-4 py-2 text-sm font-medium text-roi-btn-text transition-opacity hover:opacity-90" %>
+            </div>
+          <% end %>
         </section>
 
         <section aria-labelledby="tonight-heading">
           <div class="mb-4 flex items-baseline justify-between gap-3">
             <h2 id="tonight-heading" class="font-serif text-3xl text-roi-text">Tonight</h2>
-            <span class="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-roi-muted">On the pass</span>
+            <span class="text-[0.65rem] font-medium uppercase tracking-[0.16em] text-roi-muted">Decisions</span>
           </div>
-          <ul class="space-y-3 rounded-2xl border border-roi-border bg-roi-surface px-5 py-4" role="list">
-            <% @tonight_feed.each do |event| %>
-              <li class="flex gap-3 text-sm">
-                <time class="shrink-0 text-roi-muted"><%= event[:time] %></time>
-                <span class="text-roi-text"><%= event[:text] %></span>
-              </li>
-            <% end %>
-          </ul>
+          <% if @dashboard[:tonight_feed].empty? %>
+            <p class="rounded-2xl border border-roi-border bg-roi-surface px-5 py-8 text-center text-sm text-roi-muted">
+              No decisions yet. Seating, pacing, and cuts will appear here.
+            </p>
+          <% else %>
+            <ul class="space-y-3 rounded-2xl border border-roi-border bg-roi-surface px-5 py-4" role="list">
+              <% @dashboard[:tonight_feed].each do |event| %>
+                <li class="flex gap-3 text-sm">
+                  <time class="shrink-0 text-roi-muted"><%= event[:time] %></time>
+                  <span class="text-roi-text"><%= event[:text] %></span>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
         </section>
       </div>
     </div>
@@ -129,7 +145,7 @@
     <section aria-labelledby="manager-tools-heading">
       <h2 id="manager-tools-heading" class="mb-4 font-serif text-3xl text-roi-text">Manager tools</h2>
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <% @tools.each do |tool| %>
+        <% @dashboard[:tools].each do |tool| %>
           <%= link_to send(tool[:path_helper]),
                 class: "group block rounded-2xl border border-roi-border bg-roi-surface p-5 transition-colors hover:border-roi-muted/60" do %>
             <p class="font-serif text-2xl text-roi-text"><%= tool[:title] %></p>

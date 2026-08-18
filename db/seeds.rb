@@ -23,7 +23,14 @@ ActiveRecord::Base.transaction do
     rush_mode: false,
     sections_approved: false,
     walk_in_forecast: 28,
-    walk_in_forecast_detail: "peak 8–9 pm"
+    walk_in_forecast_detail: "peak 8–9 pm",
+    net_sales: 8420,
+    avg_turn_minutes: 68,
+    covers_vs_prior_pct: 12,
+    turn_vs_prior_minutes: 6,
+    kitchen_load_pct: 82,
+    late_demand_label: "Soft",
+    late_demand_pct: 28
   )
 
   servers = {
@@ -87,6 +94,10 @@ ActiveRecord::Base.transaction do
       confirmation_status: "confirmed",
       note: ""
     )
+  end
+
+  %w[T22 B2].each do |label|
+    tables[label].update!(status: "bill")
   end
 
   tables["T14"].update!(status: "held")
@@ -207,6 +218,16 @@ ActiveRecord::Base.transaction do
     reason: "Bar load is winding down and late demand is predicted soft.",
     status: "open"
   )
+
+  night = Time.zone.parse("2026-06-06")
+  [
+    [ night.change(hour: 20, min: 4), "T21 — walk-in seated, 2 covers" ],
+    [ night.change(hour: 20, min: 15), "T14 — Lindqvist held, 5 covers · 15 min" ],
+    [ night.change(hour: 20, min: 19), "B2 — Tan bill dropped · $86.50" ],
+    [ night.change(hour: 20, min: 22), "T24 — Adeyemi ordered dessert · server Soren" ]
+  ].each do |at, summary|
+    DecisionEvent.create!(shift:, kind: "pass_note", summary:, created_at: at, updated_at: at)
+  end
 end
 
 puts "Seeded shift #{Shift.current.id} for #{Shift.current.service_date} at #{Shift.current.location_name}."
