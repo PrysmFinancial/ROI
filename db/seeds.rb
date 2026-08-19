@@ -30,7 +30,9 @@ ActiveRecord::Base.transaction do
     turn_vs_prior_minutes: 6,
     kitchen_load_pct: 82,
     late_demand_label: "Soft",
-    late_demand_pct: 28
+    late_demand_pct: 28,
+    staffing_forecast_covers: 142,
+    staffing_plan_body: "ROI recommends 5 servers + 1 floater, with the back dining section opening at 6:30 and the patio held until 7. Matches last three comparable Fridays within 4%."
   )
 
   servers = {
@@ -46,7 +48,7 @@ ActiveRecord::Base.transaction do
     mara: ServerShift.create!(shift:, server: servers[:mara], start_order: 1, clocked_in_at: Time.zone.parse("2026-06-06 16:00"), covers_tonight: 38, covers_per_hour: 12.1),
     devin: ServerShift.create!(shift:, server: servers[:devin], start_order: 2, clocked_in_at: Time.zone.parse("2026-06-06 16:30"), covers_tonight: 41, covers_per_hour: 11.4),
     soren: ServerShift.create!(shift:, server: servers[:soren], start_order: 3, clocked_in_at: Time.zone.parse("2026-06-06 17:00"), covers_tonight: 44, covers_per_hour: 13.8),
-    priya: ServerShift.create!(shift:, server: servers[:priya], start_order: 4, clocked_in_at: Time.zone.parse("2026-06-06 17:00"), covers_tonight: 22, covers_per_hour: 8.9),
+    priya: ServerShift.create!(shift:, server: servers[:priya], start_order: 4, clocked_in_at: Time.zone.parse("2026-06-06 16:45"), covers_tonight: 22, covers_per_hour: 8.9),
     lila: ServerShift.create!(shift:, server: servers[:lila], start_order: 5, clocked_in_at: Time.zone.parse("2026-06-06 17:30"), covers_tonight: 19, covers_per_hour: 7.6),
     floater: ServerShift.create!(shift:, server: servers[:floater], start_order: 6, clocked_in_at: Time.zone.parse("2026-06-06 18:00"), covers_tonight: 8, covers_per_hour: 9.0)
   }
@@ -212,11 +214,14 @@ ActiveRecord::Base.transaction do
     status: "open"
   )
 
+  cut_at = Time.zone.parse("2026-06-06 21:05")
   CutRecommendation.create!(
     shift:,
     server_shift: server_shifts[:priya],
-    reason: "Bar load is winding down and late demand is predicted soft.",
-    status: "open"
+    reason: "Bar load is winding down and predicted late demand is soft. Cutting Priya now protects labour without risking the 9:30 walk-in wave — the remaining four servers carry the forecast comfortably.",
+    status: "open",
+    created_at: cut_at,
+    updated_at: cut_at
   )
 
   night = Time.zone.parse("2026-06-06")
