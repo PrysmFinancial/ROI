@@ -16,7 +16,18 @@ Living checklist for the Manager track. UI shells (Manager1–5) ship first; fun
 - Rush toggle: same `Host::ToggleRush` as Floor (`return_to=/manager`).
 - Kitchen load / late demand: seeded on `shifts`.
 
-Staffing / performance / guests / no-shows still use `ManagerDemo`.
+---
+
+## Done — Phase 2 staffing + cut approve (`feature/manager-p1`)
+
+`/manager/staffing` via `ManagerStaffing`:
+
+- Pre-shift card: forecast and plan copy from seeded `staffing_forecast_covers` / `staffing_plan_body` on the shift.
+- **Accept plan** → `host_approve_sections_path` with `return_to=/manager/staffing` (same as Host Pre-shift approve).
+- Live cut card: seeded `CutRecommendation` (9:05, Priya) with floor load from tables and late demand from the shift.
+- **Approve cut** → Host PIN modal + `host_approve_cut_path` (returns to staffing page).
+
+Performance / guests / no-shows still use `ManagerDemo`.
 
 ---
 
@@ -40,8 +51,8 @@ Non-functional: Rush toggle, Accept plan, Approve cut (buttons present, no POST)
 
 | Item | Notes |
 |------|--------|
-| Manager-side cut approve (C-02) | Host PIN path exists; Manager Approve cut still inert |
-| Accept pre-shift staffing plan | No model yet |
+| Manager-side cut approve (C-02) | Done on staffing page; dashboard Review still links to staffing |
+| Accept pre-shift staffing plan | Done — shares Host `ApproveSections` |
 | Real guest / no-show persistence | Needs guest models; VIP gates blocked on D-01 / hustle |
 | Net sales / avg turn from POS | Seeded snapshot on `shifts` until DEP-01 |
 | Realtime floor channel (X-01 / F-14) | |
@@ -54,3 +65,4 @@ Non-functional: Rush toggle, Accept plan, Approve cut (buttons present, no POST)
 
 - **2026-08-13** — Manager UI-only shells on `feature/manager-ui-shells` (mock data, no services).
 - **2026-08-17** — Manager P0: live dashboard + rush on `feature/manager-p0`.
+- **2026-08-18** — Manager P1: live staffing, accept plan, cut approve on `feature/manager-p1`.

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_17_221500) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_19_034500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -165,6 +165,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_17_221500) do
     t.boolean "sections_approved", default: false, null: false
     t.datetime "sections_approved_at"
     t.date "service_date", null: false
+    t.integer "staffing_forecast_covers", default: 0, null: false
+    t.text "staffing_plan_body", default: "", null: false
     t.integer "turn_vs_prior_minutes", default: 0, null: false
     t.datetime "updated_at", null: false
     t.integer "walk_in_forecast", default: 0, null: false

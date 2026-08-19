@@ -62,27 +62,6 @@ module ManagerDemo
     ]
   end
 
-  def self.staffing_presift
-    {
-      forecast: "142 covers",
-      body: "ROI recommends 5 servers + 1 floater, with the back dining section opening at 6:30 and the patio held until 7. Matches last three comparable Fridays within 4%."
-    }
-  end
-
-  def self.staffing_cut
-    {
-      time: "9:05 PM",
-      initial: "P",
-      name: "Priya N.",
-      section: "Bar",
-      meta: "22 covers · pace easing · 4h 20m on",
-      reason: "Bar load is winding down and predicted late demand is soft. Cutting Priya now protects labour without risking the 9:30 walk-in wave — the remaining four servers carry the forecast comfortably.",
-      floor_load_pct: 64,
-      late_demand: "Soft",
-      late_pct: 28
-    }
-  end
-
   def self.performance_rows
     [
       { name: "Soren K.", section: "Dining (back)", covers: 44, cov_hr: "13.8", vs_base: "+2.6", vs_tone: :up, efficiency: "96%", fairness: 88, badge: "In the weeds" },

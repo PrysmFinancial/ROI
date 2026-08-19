@@ -70,8 +70,8 @@ class PagesController < ApplicationController
 
   def manager_staffing
     @shift = current_shift
-    @presift = ManagerDemo.staffing_presift
-    @cut = ManagerDemo.staffing_cut
+    @show_cut_modal = params[:cut] == "1" || flash[:show_cut_modal]
+    @staffing = ManagerStaffing.call(shift: @shift)
   end
 
   def manager_performance

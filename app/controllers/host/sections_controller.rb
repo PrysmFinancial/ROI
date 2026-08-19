@@ -1,7 +1,9 @@
 class Host::SectionsController < Host::BaseController
+  MANAGER_STAFFING_RETURN = "/manager/staffing"
+
   def approve_all
     Host::ApproveSections.call(shift: current_shift)
-    redirect_to host_path, notice: "Section assignments approved."
+    redirect_to after_approve_sections_path, notice: "Section assignments approved."
   end
 
   def adjust
@@ -11,5 +13,14 @@ class Host::SectionsController < Host::BaseController
     redirect_to host_path, notice: "#{section.name} assigned to #{server_shift.name}."
   rescue Host::AdjustSection::InvalidServerError => e
     redirect_to host_path, alert: e.message
+  end
+
+  private
+
+  def after_approve_sections_path
+    requested = params[:return_to].to_s
+    return requested if requested == MANAGER_STAFFING_RETURN
+
+    host_path
   end
 end
