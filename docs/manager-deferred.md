@@ -27,7 +27,18 @@ Living checklist for the Manager track. UI shells (Manager1–5) ship first; fun
 - Live cut card: seeded `CutRecommendation` (9:05, Priya) with floor load from tables and late demand from the shift.
 - **Approve cut** → Host PIN modal + `host_approve_cut_path` (returns to staffing page).
 
-Performance / guests / no-shows still use `ManagerDemo`.
+---
+
+## Done — Phase 3 server performance (`feature/manager-p2`)
+
+`/manager/performance` via `ManagerPerformanceTable`:
+
+- Active `server_shifts` ranked by `covers_per_hour`.
+- Vs baseline, efficiency %, and fairness % (15% band from `Seating::Config`).
+- Weeds / Light badges match the dashboard thresholds.
+- Footer insight names the first weeds server when flagged.
+
+Guests / no-shows still use `ManagerDemo`.
 
 ---
 
@@ -66,3 +77,4 @@ Non-functional: Rush toggle, Accept plan, Approve cut (buttons present, no POST)
 - **2026-08-13** — Manager UI-only shells on `feature/manager-ui-shells` (mock data, no services).
 - **2026-08-17** — Manager P0: live dashboard + rush on `feature/manager-p0`.
 - **2026-08-18** — Manager P1: live staffing, accept plan, cut approve on `feature/manager-p1`.
+- **2026-08-19** — Manager P2: live performance table on `feature/manager-p2`.

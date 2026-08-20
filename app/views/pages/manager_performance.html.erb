@@ -27,7 +27,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-roi-border/80">
-          <% @performance_rows.each do |row| %>
+          <% @performance[:rows].each do |row| %>
             <tr>
               <td class="px-5 py-4">
                 <div class="flex flex-wrap items-center gap-2">
@@ -60,8 +60,7 @@
     </div>
 
     <p class="mt-6 max-w-3xl text-sm leading-relaxed text-roi-muted">
-      Fairness weighs covers and section difficulty so no one server is buried while another coasts.
-      Soren is flagged in the weeds — consider routing the next two parties elsewhere.
+      <%= @performance[:insight] %>
     </p>
   </main>
 </div>
