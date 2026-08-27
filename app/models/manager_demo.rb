@@ -62,16 +62,6 @@ module ManagerDemo
     ]
   end
 
-  def self.performance_rows
-    [
-      { name: "Soren K.", section: "Dining (back)", covers: 44, cov_hr: "13.8", vs_base: "+2.6", vs_tone: :up, efficiency: "96%", fairness: 88, badge: "In the weeds" },
-      { name: "Mara V.", section: "Window", covers: 38, cov_hr: "12.1", vs_base: "+1.3", vs_tone: :up, efficiency: "92%", fairness: 81, badge: nil },
-      { name: "Devin O.", section: "Dining (front)", covers: 41, cov_hr: "11.4", vs_base: "−0.2", vs_tone: :down, efficiency: "88%", fairness: 79, badge: nil },
-      { name: "Priya N.", section: "Bar", covers: 22, cov_hr: "8.9", vs_base: "−0.5", vs_tone: :down, efficiency: "84%", fairness: 72, badge: nil },
-      { name: "Lila R.", section: "Patio", covers: 19, cov_hr: "7.6", vs_base: "−1.4", vs_tone: :down, efficiency: "79%", fairness: 68, badge: "Light" }
-    ]
-  end
-
   def self.guests
     [
       { score: 94, grade: "A", tone: :high, name: "Amara Vasquez", stats: "14 visits · $340 avg · since 2021", tags: %w[HNW VIP], last: "Anniversary · 8 days ago", note: "Seat in Mara's section" },

@@ -76,7 +76,7 @@ class PagesController < ApplicationController
 
   def manager_performance
     @shift = current_shift
-    @performance_rows = ManagerDemo.performance_rows
+    @performance = ManagerPerformanceTable.call(shift: @shift)
   end
 
   def manager_guests
