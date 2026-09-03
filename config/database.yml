@@ -84,8 +84,8 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
-# Railway (and similar hosts) provide one Postgres via DATABASE_URL.
+# Do not ENV.fetch DATABASE_URL — it is unset during Docker asset precompile.
 production:
   primary:
     <<: *default
-    url: <%= ENV.fetch("DATABASE_URL") %>
+    database: roi_production
